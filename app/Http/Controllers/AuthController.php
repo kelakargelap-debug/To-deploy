@@ -44,10 +44,15 @@ class AuthController extends Controller
             return response()->json(['error' => 'Akun Anda telah dinonaktifkan oleh administrator.'], 403);
         }
 
-        // If pending verification, they need to verify email
         if ($user->status === 'pending_verification') {
-            $this->logLoginAttempt($user->id, $validated['email'], 'login_failed', 'blocked', 'unverified', $request);
-            return response()->json(['error' => 'unverified', 'message' => 'Akun belum diverifikasi. Silakan cek email Anda untuk kode OTP.'], 403);
+            if ($user->isSuperAdmin()) {
+                $user->status = 'active';
+                $user->email_verified_at = now();
+                $user->save();
+            } else {
+                $this->logLoginAttempt($user->id, $validated['email'], 'login_failed', 'blocked', 'unverified', $request);
+                return response()->json(['error' => 'unverified', 'message' => 'Akun belum diverifikasi. Silakan cek email Anda untuk kode OTP.'], 403);
+            }
         }
 
         // TODO: Trusted device and New Device OTP logic will go here in Phase 2

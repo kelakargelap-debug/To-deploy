@@ -52,11 +52,17 @@ class WebAuthController extends Controller
         }
 
         if ($user->status === 'pending_verification') {
-            $this->logLoginAttempt($user->id, $request->email, 'login_failed', 'blocked', 'unverified', $request);
-            $this->generateAndSendOtp($user, 'register_verification', 10);
-            $request->session()->put('otp_email', $user->email);
-            $request->session()->put('otp_purpose', 'register_verification');
-            return redirect()->route('verify-otp')->with('info', 'Akun Anda belum diverifikasi. Kode OTP telah dikirim ulang ke email Anda.');
+            if ($user->isSuperAdmin()) {
+                $user->status = 'active';
+                $user->email_verified_at = now();
+                $user->save();
+            } else {
+                $this->logLoginAttempt($user->id, $request->email, 'login_failed', 'blocked', 'unverified', $request);
+                $this->generateAndSendOtp($user, 'register_verification', 10);
+                $request->session()->put('otp_email', $user->email);
+                $request->session()->put('otp_purpose', 'register_verification');
+                return redirect()->route('verify-otp')->with('info', 'Akun Anda belum diverifikasi. Kode OTP telah dikirim ulang ke email Anda.');
+            }
         }
 
         $deviceId = $request->cookie('device_id');
@@ -70,6 +76,10 @@ class WebAuthController extends Controller
             if ($device) {
                 $isTrusted = true;
             }
+        }
+
+        if ($user->isSuperAdmin()) {
+            $isTrusted = true;
         }
 
         if (!$isTrusted) {
