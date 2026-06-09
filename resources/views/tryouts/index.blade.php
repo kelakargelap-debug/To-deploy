@@ -301,7 +301,6 @@
             }).join('');
         }
     }
-    }
 })();
 </script>
 @endsection
