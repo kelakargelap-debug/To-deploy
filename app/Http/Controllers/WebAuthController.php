@@ -250,7 +250,12 @@ class WebAuthController extends Controller
             'resend_count' => 0,
         ]);
 
-        Mail::to($user->email)->send(new OtpMail($code, $user->name, $purpose));
+        try {
+            Mail::to($user->email)->send(new OtpMail($code, $user->name, $purpose));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Failed to send OTP email to {$user->email}: " . $e->getMessage());
+            session()->flash('otp_fallback', "Gagal mengirim email verifikasi. Gunakan kode OTP demo berikut untuk melanjutkan: $code");
+        }
     }
 
     private function logLoginAttempt($userId, $input, $activityType, $status, $failureReason, Request $request)

@@ -28,6 +28,12 @@
                     </div>
                 @endif
 
+                @if(session('otp_fallback'))
+                    <div class="mb-5">
+                        <x-alert type="warning" :message="session('otp_fallback')" />
+                    </div>
+                @endif
+
                 @if($errors->any())
                     <div class="mb-5">
                         <x-alert type="danger" :message="$errors->first()" />

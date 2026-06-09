@@ -84,9 +84,19 @@ class SecurityController extends Controller
             'last_sent_at' => now(),
         ]);
 
-        Mail::to($user->email)->send(new OtpMail($code, $user->name, 'logout_all_devices'));
+        $mailSent = true;
+        try {
+            Mail::to($user->email)->send(new OtpMail($code, $user->name, 'logout_all_devices'));
+        } catch (\Exception $e) {
+            $mailSent = false;
+            \Illuminate\Support\Facades\Log::error("Failed to send logout OTP email to {$user->email}: " . $e->getMessage());
+        }
 
-        return redirect()->back()->with('show_logout_otp', true)->with('info', 'Kode OTP telah dikirim ke email Anda untuk konfirmasi Logout Semua Perangkat.');
+        if ($mailSent) {
+            return redirect()->back()->with('show_logout_otp', true)->with('info', 'Kode OTP telah dikirim ke email Anda untuk konfirmasi Logout Semua Perangkat.');
+        } else {
+            return redirect()->back()->with('show_logout_otp', true)->with('info', "Gagal mengirim email verifikasi. Gunakan kode OTP demo berikut untuk konfirmasi: $code");
+        }
     }
 
     public function confirmLogoutAll(Request $request)

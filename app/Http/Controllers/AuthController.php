@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
+    private $otpFallbackCode = null;
     /**
      * Login a user and create a Sanctum token.
      */
@@ -108,11 +109,17 @@ class AuthController extends Controller
 
         $this->generateAndSendOtp($user, 'register_verification', 10);
 
-        return response()->json([
+        $responseData = [
             'success' => true,
             'message' => 'Registrasi berhasil. Silakan cek email Anda untuk kode OTP.',
             'email' => $user->email,
-        ], 201);
+        ];
+
+        if ($this->otpFallbackCode) {
+            $responseData['otp_fallback'] = $this->otpFallbackCode;
+        }
+
+        return response()->json($responseData, 201);
     }
 
     /**
@@ -206,7 +213,12 @@ class AuthController extends Controller
 
         $this->generateAndSendOtp($user, $validated['purpose'], $validated['purpose'] === 'register_verification' ? 10 : 5);
 
-        return response()->json(['success' => true, 'message' => 'Kode OTP baru telah dikirim.']);
+        $responseData = ['success' => true, 'message' => 'Kode OTP baru telah dikirim.'];
+        if ($this->otpFallbackCode) {
+            $responseData['otp_fallback'] = $this->otpFallbackCode;
+        }
+
+        return response()->json($responseData);
     }
 
     /**
@@ -301,7 +313,12 @@ class AuthController extends Controller
         ]);
 
         // Send email
-        Mail::to($user->email)->send(new OtpMail($code, $user->name, $purpose));
+        try {
+            Mail::to($user->email)->send(new OtpMail($code, $user->name, $purpose));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Failed to send OTP email to {$user->email}: " . $e->getMessage());
+            $this->otpFallbackCode = $code;
+        }
     }
 
     /**
