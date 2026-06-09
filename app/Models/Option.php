@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[Fillable(['question_id', 'label', 'content', 'is_correct', 'order'])]
 class Option extends Model
 {
+    public $timestamps = false;
+
     /**
      * Get the attributes that should be cast.
      *

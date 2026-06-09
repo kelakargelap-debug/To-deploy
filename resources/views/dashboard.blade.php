@@ -1,81 +1,105 @@
 @extends('app')
 
 @section('content')
-    <div class="space-y-8">
-        {{-- Account Status Header --}}
-        <div>
-            <div class="flex flex-wrap items-center gap-2">
-                <h2 class="text-[1.067rem] font-medium" style="color: var(--text-primary);">
-                    {{ Auth::user()->name }}
-                </h2>
-                <span
-                    class="{{ Auth::user()->membership_tier === 'PREMIUM' ? 'badge badge-premium' : 'badge badge-free' }}">
+    <div class="space-y-6 max-w-5xl mx-auto">
+        {{-- Page Header --}}
+        <div class="mb-2">
+            <div class="flex flex-wrap items-center gap-3">
+                <h1 class="text-display-lg" style="color: var(--md-on-surface);">{{ Auth::user()->name }}</h1>
+                <span class="badge {{ Auth::user()->membership_tier === 'PREMIUM' ? 'badge-premium' : 'badge-free' }}">
                     {{ Auth::user()->membership_tier === 'PREMIUM' ? 'PREMIUM' : 'GRATIS' }}
                 </span>
             </div>
-            <p class="text-[13px] mt-0.5" style="color: var(--text-secondary);">{{ Auth::user()->email }}</p>
+            <p class="text-body-md mt-1" style="color: var(--md-on-surface-variant);">{{ Auth::user()->email }}</p>
             @if(Auth::user()->membership_status === 'ACTIVE' && Auth::user()->membership_tier === 'PREMIUM' && Auth::user()->membership_expiry)
-                <p class="text-[12px] mt-0.5" style="color: var(--text-muted);">
-                    Premium sampai {{ \Carbon\Carbon::parse(Auth::user()->membership_expiry)->format('d M Y') }}
+                <p class="text-label-md mt-1" style="color: var(--success);">
+                    <span class="material-symbols-outlined text-sm align-middle">verified</span>
+                    Premium aktif sampai {{ \Carbon\Carbon::parse(Auth::user()->membership_expiry)->format('d M Y') }}
                 </p>
             @endif
         </div>
 
         {{-- Active Attempt Alert --}}
         <div id="active-attempt-alert" class="hidden">
-            <div class="p-3 rounded-lg flex items-center gap-3"
-                style="background: var(--warning-subtle); border: 1px solid var(--warning); color: var(--warning);">
-                <svg class="w-5 h-5 shrink-0 animate-ping" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-                </svg>
-                <div>
-                    <p class="text-[13px] font-medium">Kamu memiliki tryout yang sedang berjalan!</p>
-                    <p class="text-[12px] opacity-75" id="active-attempt-name"></p>
+            <x-alert type="warning">
+                <div class="flex items-center justify-between flex-wrap gap-3">
+                    <div>
+                        <p class="font-medium">Kamu memiliki tryout yang sedang berjalan!</p>
+                        <p class="text-sm opacity-90 mt-0.5" id="active-attempt-name"></p>
+                    </div>
+                    <div class="flex gap-2">
+                        <a href="#" id="active-attempt-resume" class="btn-primary btn-sm flex-shrink-0">
+                            <span class="material-symbols-outlined text-lg">play_arrow</span>
+                            Lanjutkan
+                        </a>
+                        <button id="active-attempt-end" class="btn-danger btn-sm flex-shrink-0">
+                            <span class="material-symbols-outlined text-lg">stop</span>
+                            Akhiri
+                        </button>
+                    </div>
                 </div>
-                <a href="#" id="active-attempt-resume" class="ml-auto btn-primary text-[13px] h-8 px-3">Lanjutkan</a>
+            </x-alert>
+        </div>
+
+        {{-- Quick Stats Grid --}}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="stat-card">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="stat-card-icon" style="background: var(--md-primary-fixed); color: var(--md-primary);">
+                        <span class="material-symbols-outlined">check_circle</span>
+                    </div>
+                    <span class="stat-card-label">Total Tryout Selesai</span>
+                </div>
+                <div class="stat-card-value" id="stat-completed">0</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="stat-card-icon" style="background: var(--success-subtle); color: var(--success);">
+                        <span class="material-symbols-outlined">menu_book</span>
+                    </div>
+                    <span class="stat-card-label">Materi Dipelajari</span>
+                </div>
+                <div class="stat-card-value" id="stat-materials">0</div>
+            </div>
+
+            <div class="stat-card sm:col-span-2 lg:col-span-2">
+                <span class="stat-card-label">Status Membership</span>
+                <div class="flex items-center gap-3 mt-4">
+                    <span class="badge {{ Auth::user()->isPremiumActive() ? 'badge-premium' : 'badge-free' }} px-3 py-1 text-sm">
+                        {{ Auth::user()->isPremiumActive() ? 'PREMIUM AKTIF' : 'GRATIS' }}
+                    </span>
+                    @if(!Auth::user()->isPremiumActive())
+                        <a href="{{ route('profile') }}" class="text-label-md font-semibold hover:underline" style="color: var(--md-primary);">
+                            Upgrade sekarang
+                            <span class="material-symbols-outlined text-sm align-middle">arrow_forward</span>
+                        </a>
+                    @endif
+                </div>
             </div>
         </div>
 
-        {{-- Quick Stats — flat rows, not cards --}}
-        <div class="rounded-lg overflow-hidden" style="border: 1px solid var(--border-subtle);">
-            <div class="list-row clickable">
-                <span class="text-[13px]" style="color: var(--text-secondary);">Total Tryout Diselesaikan</span>
-                <span class="text-[14px] font-medium font-mono" style="color: var(--text-primary);"
-                    id="stat-completed">0</span>
+        {{-- Tryout CTA Section --}}
+        <div class="card text-center p-8 border-dashed" style="background: var(--md-surface-container-low);">
+            <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4"
+                style="background: var(--md-primary-fixed); color: var(--md-primary);">
+                <span class="material-symbols-outlined text-3xl">school</span>
             </div>
-            <div class="list-row clickable">
-                <span class="text-[13px]" style="color: var(--text-secondary);">Materi Dipelajari</span>
-                <span class="text-[14px] font-medium font-mono" style="color: var(--text-primary);"
-                    id="stat-materials">0</span>
-            </div>
-            <div class="list-row clickable">
-                <span class="text-[13px]" style="color: var(--text-secondary);">Status Membership</span>
-                <span class="{{ Auth::user()->isPremiumActive() ? 'badge badge-premium' : 'badge badge-free' }}">
-                    {{ Auth::user()->isPremiumActive() ? 'PREMIUM AKTIF' : 'GRATIS' }}
-                </span>
-            </div>
-        </div>
-
-        {{-- Tryout Section --}}
-        <div>
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="text-[1rem] font-medium" style="color: var(--text-primary);">Tryout</h3>
-                <a href="{{ route('tryouts') }}" class="text-[13px] font-medium hover:underline"
-                    style="color: var(--accent);">Lihat Semua &rarr;</a>
-            </div>
-            <div class="rounded-lg p-8 text-center" style="border: 1px dashed var(--border-default);">
-                <p class="text-[13px]" style="color: var(--text-muted);">Jelajahi tryout yang tersedia untuk menguji
-                    kemampuan Anda.</p>
-                <a href="{{ route('tryouts') }}" class="btn-primary mt-3 h-8 text-[13px] px-4 inline-flex">Lihat Tryout</a>
-            </div>
+            <h3 class="text-headline-md mb-2" style="color: var(--md-on-surface);">Jelajahi Tryout SKB</h3>
+            <p class="text-body-md max-w-md mx-auto mb-6" style="color: var(--md-on-surface-variant);">
+                Uji kemampuanmu dengan berbagai tryout SKB yang tersedia. Dapatkan analisis nilai dan pembahasan lengkap.
+            </p>
+            <a href="{{ route('tryouts') }}" class="btn-primary">
+                <span class="material-symbols-outlined text-lg">quiz</span>
+                Lihat Daftar Tryout
+            </a>
         </div>
 
         {{-- Recent Attempts --}}
         <div id="recent-attempts" class="hidden">
-            <h3 class="text-[1rem] font-medium mb-4" style="color: var(--text-primary);">Percobaan Terakhir</h3>
-            <div class="rounded-lg overflow-hidden" style="border: 1px solid var(--border-subtle);"
-                id="recent-attempts-list">
+            <h3 class="text-headline-sm mb-4" style="color: var(--md-on-surface);">Percobaan Terakhir</h3>
+            <div class="data-table-wrapper" id="recent-attempts-list">
+                <!-- Loaded via JS -->
             </div>
         </div>
     </div>
@@ -96,6 +120,28 @@
                     el.classList.remove('hidden');
                     document.getElementById('active-attempt-name').textContent = data.tryoutTitle || data.tryoutSlug || '';
                     document.getElementById('active-attempt-resume').href = '/tryouts/' + (data.tryoutSlug || '') + '/exam';
+
+                    var endBtn = document.getElementById('active-attempt-end');
+                    if (endBtn) {
+                        endBtn.onclick = function() {
+                            if (!confirm('Anda yakin ingin mengakhiri tryout ini? Ujian akan dikumpulkan dan skor akan dihitung.')) {
+                                return;
+                            }
+                            apiFetch('/tryouts/' + (data.tryoutSlug || '') + '/submit', {
+                                method: 'POST',
+                                body: JSON.stringify({ attempt_id: data.attemptId })
+                            }).then(function() {
+                                if (typeof showToast === 'function') {
+                                    showToast('Tryout berhasil diakhiri.', 'success');
+                                } else {
+                                    alert('Tryout berhasil diakhiri.');
+                                }
+                                window.location.reload();
+                            }).catch(function(err) {
+                                alert('Gagal mengakhiri tryout: ' + err.message);
+                            });
+                        };
+                    }
                 }
             }).catch(function () { });
 
@@ -105,7 +151,7 @@
                 if (Array.isArray(attempts) && attempts.length > 0) {
                     document.getElementById('recent-attempts').classList.remove('hidden');
                     var list = document.getElementById('recent-attempts-list');
-                    list.innerHTML = attempts.slice(0, 5).map(function (a) {
+                    var rowsHtml = attempts.slice(0, 5).map(function (a) {
                         var isSubmitted = a.status === 'SUBMITTED';
                         var score = a.score !== null && a.score !== undefined ? a.score + '%' : '-';
                         var statusBadge = isSubmitted
@@ -113,16 +159,17 @@
                             : '<span class="badge badge-warning">' + (a.status || '') + '</span>';
                         return '<div class="list-row">' +
                             '<div class="min-w-0 flex-1">' +
-                            '<p class="text-[14px] font-medium truncate" style="color: var(--text-primary);">' + (a.tryoutTitle || 'Tryout') + '</p>' +
-                            '<p class="text-[12px] mt-0.5" style="color: var(--text-muted);">' + (a.categoryName || '') + '</p>' +
+                            '<p class="font-medium truncate" style="color: var(--md-on-surface);">' + (a.tryoutTitle || 'Tryout') + '</p>' +
+                            '<p class="text-label-sm mt-0.5" style="color: var(--md-outline);">' + (a.categoryName || '') + '</p>' +
                             '</div>' +
-                            '<div class="flex items-center gap-3 ml-4 shrink-0">' +
+                            '<div class="flex items-center gap-4 shrink-0">' +
                             statusBadge +
-                            '<span class="text-[14px] font-mono font-medium" style="color: var(--text-primary);">' + score + '</span>' +
-                            '<a href="/tryouts/' + (a.tryoutSlug || '') + '/result/' + a.id + '" class="text-[13px] font-medium hover:underline" style="color: var(--accent);">Lihat</a>' +
+                            '<span class="font-mono font-bold w-12 text-right">' + score + '</span>' +
+                            '<a href="/tryouts/' + (a.tryoutSlug || '') + '/result/' + a.id + '" class="btn-ghost btn-sm" style="color: var(--md-primary);">Lihat</a>' +
                             '</div>' +
                             '</div>';
                     }).join('');
+                    list.innerHTML = rowsHtml;
                 }
             }).catch(function () { });
         })();

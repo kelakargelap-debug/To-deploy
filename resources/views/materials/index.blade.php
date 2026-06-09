@@ -1,70 +1,50 @@
 @extends('app')
 
 @section('content')
-<div class="p-6 max-w-6xl mx-auto">
-    <!-- Page header -->
-    <div class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Materi Belajar</h1>
-        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Pilih materi yang ingin kamu pelajari</p>
+<div class="max-w-7xl mx-auto w-full">
+    <!-- Header Section -->
+    <div class="mb-8">
+        <h1 class="text-display-lg mb-2" style="color: var(--md-on-surface);">Materi Belajar</h1>
+        <p class="text-body-md" style="color: var(--md-on-surface-variant);">Pilih materi yang ingin kamu pelajari</p>
     </div>
 
     <!-- Category filter chips -->
-    <div id="material-category-filters" class="mb-6 flex flex-wrap gap-2">
+    <div id="material-category-filters" class="flex flex-wrap gap-3 mb-8">
         <button onclick="filterMaterials('all')" class="filter-chip active" data-category="all">Semua</button>
     </div>
 
     <!-- Material cards grid -->
-    <div id="material-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div id="material-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Loading state -->
-        <div class="card animate-pulse"><div class="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-3"></div><div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div></div>
-        <div class="card animate-pulse"><div class="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-3"></div><div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div></div>
-        <div class="card animate-pulse"><div class="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-3"></div><div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div></div>
+        <div class="rounded-xl p-6 animate-pulse" style="background: var(--md-surface-container-lowest); border: 1px solid var(--md-outline-variant); box-shadow: 0 4px 15px rgba(0,74,198,0.04);">
+            <div class="h-5 rounded w-3/4 mb-4" style="background: var(--md-surface-container-high);"></div>
+            <div class="h-4 rounded w-1/2 mb-6" style="background: var(--md-surface-container-high);"></div>
+            <div class="h-6 rounded w-1/3 mb-4" style="background: var(--md-surface-container);"></div>
+            <div class="h-10 rounded-lg w-full" style="background: var(--md-surface-container-high);"></div>
+        </div>
+        <div class="rounded-xl p-6 animate-pulse" style="background: var(--md-surface-container-lowest); border: 1px solid var(--md-outline-variant); box-shadow: 0 4px 15px rgba(0,74,198,0.04);">
+            <div class="h-5 rounded w-3/4 mb-4" style="background: var(--md-surface-container-high);"></div>
+            <div class="h-4 rounded w-1/2 mb-6" style="background: var(--md-surface-container-high);"></div>
+            <div class="h-6 rounded w-1/3 mb-4" style="background: var(--md-surface-container);"></div>
+            <div class="h-10 rounded-lg w-full" style="background: var(--md-surface-container-high);"></div>
+        </div>
+        <div class="rounded-xl p-6 animate-pulse" style="background: var(--md-surface-container-lowest); border: 1px solid var(--md-outline-variant); box-shadow: 0 4px 15px rgba(0,74,198,0.04);">
+            <div class="h-5 rounded w-3/4 mb-4" style="background: var(--md-surface-container-high);"></div>
+            <div class="h-4 rounded w-1/2 mb-6" style="background: var(--md-surface-container-high);"></div>
+            <div class="h-6 rounded w-1/3 mb-4" style="background: var(--md-surface-container);"></div>
+            <div class="h-10 rounded-lg w-full" style="background: var(--md-surface-container-high);"></div>
+        </div>
     </div>
 
     <!-- Empty state -->
     <div id="material-empty" class="hidden">
-        <div class="text-center py-12">
-            <svg class="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.168 18.477 17.683 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-            </svg>
-            <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300">Belum ada materi tersedia</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">Coba kembali lagi nanti</p>
-        </div>
+        <x-empty-state 
+            icon='<svg class="w-16 h-16 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1" style="color: var(--md-outline);"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.168 18.477 17.683 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>' 
+            title="Belum ada materi tersedia" 
+            description="Coba kembali lagi nanti" 
+        />
     </div>
 </div>
-
-<style>
-    .filter-chip {
-        padding: 0.5rem 1rem;
-        border-radius: 9999px;
-        font-size: 0.875rem;
-        font-weight: 500;
-        transition: all 150ms;
-        background: #f3f4f6;
-        color: #4b5563;
-        border: 1px solid transparent;
-    }
-    .filter-chip:hover {
-        background: #e5e7eb;
-    }
-    .filter-chip.active {
-        background: #dbeafe;
-        color: #1d4ed8;
-        border-color: #93c5fd;
-    }
-    :root.dark .filter-chip {
-        background: #374151;
-        color: #9ca3af;
-    }
-    :root.dark .filter-chip:hover {
-        background: #4b5563;
-    }
-    :root.dark .filter-chip.active {
-        background: rgba(30, 58, 138, 0.3);
-        color: #60a5fa;
-        border-color: #1e3a8a;
-    }
-</style>
 
 <script>
 (function() {
@@ -93,21 +73,31 @@
             categories = Object.keys(catSet);
             renderCategoryFilters();
             renderMaterials();
-            // Remove loading placeholders
-            document.getElementById('material-grid').innerHTML = '';
         }).catch(function(err) {
             console.error('Failed to load materials:', err);
-            document.getElementById('material-grid').innerHTML = '';
-            document.getElementById('material-empty').classList.remove('hidden');
+            var grid = document.getElementById('material-grid');
+            var empty = document.getElementById('material-empty');
+            if (grid) grid.innerHTML = '';
+            if (empty) empty.classList.remove('hidden');
         });
     }
 
     function renderCategoryFilters() {
         var container = document.getElementById('material-category-filters');
         if (!container) return;
-        var html = '<button onclick="filterMaterials(\'all\')" class="filter-chip ' + (activeCategory === 'all' ? 'active' : '') + '" data-category="all">Semua</button>';
+
+        var html = '<button onclick="filterMaterials(\'all\')" style="' +
+            (activeCategory === 'all'
+                ? 'background: var(--md-primary-fixed); color: var(--md-primary); border: 1px solid var(--md-primary);'
+                : 'background: var(--md-surface-container); color: var(--md-on-surface-variant); border: 1px solid transparent;') +
+            '" class="px-4 py-2 rounded-full text-label-md font-medium transition-colors">Semua</button>';
+
         categories.forEach(function(cat) {
-            html += '<button onclick="filterMaterials(\'' + cat + '\')" class="filter-chip ' + (activeCategory === cat ? 'active' : '') + '" data-category="' + cat + '">' + cat + '</button>';
+            html += '<button onclick="filterMaterials(\'' + cat + '\')" style="' +
+                (activeCategory === cat
+                    ? 'background: var(--md-primary-fixed); color: var(--md-primary); border: 1px solid var(--md-primary);'
+                    : 'background: var(--md-surface-container); color: var(--md-on-surface-variant); border: 1px solid transparent;') +
+                '" class="px-4 py-2 rounded-full text-label-md font-medium transition-colors">' + cat + '</button>';
         });
         container.innerHTML = html;
     }
@@ -128,43 +118,58 @@
         var emptyState = document.getElementById('material-empty');
 
         if (filtered.length === 0) {
-            container.innerHTML = '';
-            emptyState.classList.remove('hidden');
+            if (container) container.innerHTML = '';
+            if (emptyState) emptyState.classList.remove('hidden');
             return;
         }
 
-        emptyState.classList.add('hidden');
-        container.innerHTML = filtered.map(function(m) {
+        if (emptyState) emptyState.classList.add('hidden');
+        if (container) container.innerHTML = filtered.map(function(m) {
             var tier = m.required_tier || m.tier || m.membership_tier || 'FREE';
             var isPremium = tier === 'PREMIUM';
             var isLocked = isPremium && userTier !== 'PREMIUM';
             var catName = m.categoryName || (m.category && m.category.name) || m.category_name || '';
             var isCompleted = !!m.completedAt || m.is_completed || m.completed;
-            var completionStatus = isCompleted ? 'Selesai' : 'Belum Selesai';
-            var completionBadge = isCompleted ? 'badge-success' : 'badge-free';
             var slug = m.slug || m.id;
 
-            var lockOverlay = isLocked ? '<div class="absolute inset-0 bg-gray-900/50 dark:bg-gray-900/70 rounded-xl flex items-center justify-center z-10"><div class="text-center"><svg class="w-8 h-8 text-amber-500 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75"/></svg><p class="text-white font-medium text-sm">Premium Only</p></div></div>' : '';
+            // --- Lock Overlay ---
+            var lockOverlay = isLocked ? '<div class="absolute inset-0 rounded-xl flex items-center justify-center z-10" style="background: rgba(0,0,0,0.45);"><div class="text-center"><span class="material-symbols-outlined text-3xl mb-2" style="color: #f59e0b;">lock</span><p class="text-white font-medium text-sm">Premium Only</p></div></div>' : '';
 
+            // --- Tier Badge ---
             var tierBadge = isPremium
-                ? '<span class="badge badge-premium">PREMIUM</span>'
-                : '<span class="badge badge-free">FREE</span>';
+                ? '<span class="px-2 py-1 text-xs font-bold rounded shrink-0" style="background: #fef3c7; color: #92400e;">PREMIUM</span>'
+                : '<span class="px-2 py-1 text-xs font-bold rounded shrink-0" style="background: #dcfce7; color: #166534;">FREE</span>';
 
+            // --- Completion Badge ---
+            var completionBadgeHtml = isCompleted
+                ? '<span class="inline-flex items-center gap-1 px-2 py-1 rounded text-label-sm" style="background: #ecfdf5; color: #059669;"><span class="material-symbols-outlined text-sm">check_circle</span>Selesai</span>'
+                : '<span class="inline-flex items-center gap-1 px-2 py-1 rounded text-label-sm" style="background: var(--md-surface-container-high); color: var(--md-on-surface-variant);">Belum Selesai</span>';
+
+            // --- Action Button ---
+            var actionText = isCompleted ? 'Baca Lagi' : 'Baca Materi';
             var actionBtn = isLocked
-                ? '<button class="btn-secondary w-full opacity-75 cursor-not-allowed" disabled>Premium Only</button>'
-                : '<a href="/materials/' + slug + '" class="btn-primary w-full text-center">Baca Materi</a>';
+                ? '<button style="background: var(--md-surface-variant); color: var(--md-on-surface-variant); opacity: 0.75;" class="w-full py-2.5 px-4 cursor-not-allowed flex items-center justify-center gap-2 text-label-md font-semibold rounded-lg" disabled><span class="material-symbols-outlined text-lg">lock</span>Premium</button>'
+                : '<a href="/materials/' + slug + '" style="background: var(--md-primary); color: var(--md-on-primary);" class="block w-full py-2.5 px-4 text-center text-label-md font-semibold rounded-lg hover:opacity-90 transition-opacity">' + actionText + '</a>';
 
-            return '<div class="card relative overflow-hidden">' +
+            // --- Description ---
+            var desc = m.description || m.excerpt || '';
+            var descHtml = desc
+                ? '<p class="text-body-md mb-6 flex-grow" style="color: var(--md-on-surface-variant); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">' + desc + '</p>'
+                : '<div class="mb-6 flex-grow"></div>';
+
+            // --- Card ---
+            return '<div class="rounded-xl p-6 flex flex-col h-full hover:shadow-lg transition-shadow duration-300 relative overflow-hidden" style="background: var(--md-surface-container-lowest); border: 1px solid var(--md-outline-variant); box-shadow: 0 4px 15px rgba(0,74,198,0.04);">' +
                 lockOverlay +
-                '<div class="flex items-center justify-between mb-2">' +
-                    '<h3 class="font-semibold text-gray-900 dark:text-gray-100">' + (m.title || m.name) + '</h3>' +
+                '<div class="flex justify-between items-start mb-4">' +
+                    '<h2 class="text-headline-sm pr-4" style="color: var(--md-on-surface);">' + (m.title || m.name) + '</h2>' +
                     tierBadge +
                 '</div>' +
-                (catName ? '<p class="text-xs text-gray-500 dark:text-gray-400 mb-2"><span class="bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded">' + catName + '</span></p>' : '') +
-                '<div class="mb-3">' +
-                    '<span class="badge ' + completionBadge + '">' + completionStatus + '</span>' +
+                (catName ? '<div class="mb-4"><span class="inline-block px-3 py-1 rounded-full text-label-sm" style="background: var(--md-surface-container-low); color: var(--md-on-surface-variant);">' + catName + '</span></div>' : '') +
+                descHtml +
+                '<div class="mt-auto pt-4" style="border-top: 1px solid var(--md-outline-variant);">' +
+                    '<div class="mb-4 flex flex-wrap gap-2">' + completionBadgeHtml + '</div>' +
+                    actionBtn +
                 '</div>' +
-                actionBtn +
             '</div>';
         }).join('');
     }

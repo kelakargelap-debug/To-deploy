@@ -1,16 +1,15 @@
 @extends('app')
 
 @section('content')
-    <div class="p-6 max-w-4xl mx-auto">
-        <div class="flex items-center gap-4 mb-6">
-            <button id="back-button" onclick="goBack()"
-                class="px-3 py-2 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors">
+    <div class="max-w-4xl mx-auto">
+        <div class="mb-6">
+            <button id="back-button" onclick="goBack()" class="btn-ghost mb-4">
                 &larr; Back
             </button>
-            <h1 id="page-title" class="text-2xl font-bold text-gray-900 dark:text-gray-100">Tambah Soal</h1>
+            <h1 id="page-title" class="text-2xl font-bold text-[var(--text-primary)]">Tambah Soal</h1>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-6">
+        <div class="bg-[var(--bg-surface)] rounded-lg shadow-sm border border-[var(--border-color)] p-6">
             <form id="question-form" class="space-y-5">
                 <input type="hidden" id="edit-question-id" value="">
                 <input type="hidden" id="tryout-id" value="">
@@ -18,21 +17,20 @@
 
                 {{-- Type Selector --}}
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Question Type <span
-                            class="text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-[var(--text-secondary)] mb-1">Question Type <span class="text-[var(--danger)]">*</span></label>
                     <div class="flex gap-3" id="type-selector">
                         <button type="button" onclick="selectType('SINGLE_CHOICE')"
-                            class="type-btn px-4 py-2 rounded-lg border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium transition-colors hover:border-indigo-400"
+                            class="type-btn px-4 py-2 rounded-lg border-2 border-[var(--border-color)] bg-[var(--bg-surface)] text-[var(--text-secondary)] text-sm font-medium transition-colors hover:border-[var(--accent)]"
                             data-type="SINGLE_CHOICE">
                             Single Choice
                         </button>
                         <button type="button" onclick="selectType('MULTIPLE_CHOICE')"
-                            class="type-btn px-4 py-2 rounded-lg border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium transition-colors hover:border-indigo-400"
+                            class="type-btn px-4 py-2 rounded-lg border-2 border-[var(--border-color)] bg-[var(--bg-surface)] text-[var(--text-secondary)] text-sm font-medium transition-colors hover:border-[var(--accent)]"
                             data-type="MULTIPLE_CHOICE">
                             Multiple Choice
                         </button>
                         <button type="button" onclick="selectType('TRUE_FALSE')"
-                            class="type-btn px-4 py-2 rounded-lg border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium transition-colors hover:border-indigo-400"
+                            class="type-btn px-4 py-2 rounded-lg border-2 border-[var(--border-color)] bg-[var(--bg-surface)] text-[var(--text-secondary)] text-sm font-medium transition-colors hover:border-[var(--accent)]"
                             data-type="TRUE_FALSE">
                             True / False
                         </button>
@@ -40,80 +38,77 @@
                 </div>
 
                 {{-- Content --}}
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Question Content <span
-                            class="text-red-500">*</span></label>
-                    <textarea id="input-content" rows="4" required
-                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm focus:ring-2 focus:ring-indigo-500 resize-y"></textarea>
-                </div>
+                <x-form-field 
+                    id="input-content" 
+                    label="Question Content" 
+                    type="textarea" 
+                    rows="4" 
+                    required="true" 
+                />
 
                 {{-- Image Upload --}}
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Image (optional)</label>
+                    <label class="block text-sm font-medium text-[var(--text-secondary)] mb-1">Image (optional)</label>
                     <div id="image-upload-area"
-                        class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4 text-center cursor-pointer hover:border-indigo-400 dark:hover:border-indigo-500 transition-colors"
+                        class="border-2 border-dashed border-[var(--border-color)] rounded-lg p-4 text-center cursor-pointer hover:border-[var(--accent)] transition-colors"
                         onclick="document.getElementById('image-file-input').click()"
-                        ondragover="event.preventDefault(); this.classList.add('border-indigo-400', 'dark:border-indigo-500')"
-                        ondragleave="this.classList.remove('border-indigo-400', 'dark:border-indigo-500')"
+                        ondragover="event.preventDefault(); this.style.borderColor = 'var(--accent)';"
+                        ondragleave="this.style.borderColor = 'var(--border-color)';"
                         ondrop="handleImageDrop(event)">
                         <input type="file" id="image-file-input" accept="image/*" class="hidden"
                             onchange="handleImageFileSelect(event)">
-                        <svg class="mx-auto h-8 w-8 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor"
+                        <svg class="mx-auto h-8 w-8 text-[var(--text-muted)]" fill="none" stroke="currentColor"
                             viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
-                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">Drag & drop or click to upload</p>
-                        <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Max 10MB</p>
+                        <p class="text-sm text-[var(--text-secondary)] mt-2">Drag & drop or click to upload</p>
+                        <p class="text-xs text-[var(--text-muted)] mt-1">Max 10MB</p>
                     </div>
                     <div id="image-preview-container" class="hidden mt-3">
-                        <img id="image-preview" class="max-h-40 rounded-lg border border-gray-200 dark:border-gray-700"
+                        <img id="image-preview" class="max-h-40 rounded-lg border border-[var(--border-color)]"
                             alt="Question image">
                         <button type="button" onclick="removeImage()"
-                            class="mt-2 px-3 py-1 text-xs bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 rounded hover:bg-red-200 dark:hover:bg-red-800 transition-colors">Remove
-                            Image</button>
+                            class="mt-2 btn-ghost btn-sm text-[var(--danger)]">Remove Image</button>
                     </div>
                     <div class="mt-2">
-                        <label class="text-xs text-gray-500 dark:text-gray-400">Or enter image URL:</label>
-                        <input type="text" id="input-image-url" placeholder="https://..."
-                            class="w-full mt-1 px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-xs focus:ring-2 focus:ring-indigo-500">
+                        <label class="text-xs text-[var(--text-secondary)]">Or enter image URL:</label>
+                        <input type="text" id="input-image-url" placeholder="https://..." class="input-field mt-1 text-xs py-1.5">
                     </div>
                 </div>
 
                 {{-- Points --}}
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Points</label>
-                    <input type="number" id="input-points" value="1" min="1"
-                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm focus:ring-2 focus:ring-indigo-500">
-                </div>
+                <x-form-field 
+                    id="input-points" 
+                    label="Points" 
+                    type="number" 
+                    value="1" 
+                    min="1" 
+                />
 
                 {{-- Explanation --}}
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Explanation
-                        (optional)</label>
-                    <textarea id="input-explanation" rows="3"
-                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm focus:ring-2 focus:ring-indigo-500 resize-y"></textarea>
-                </div>
+                <x-form-field 
+                    id="input-explanation" 
+                    label="Explanation (optional)" 
+                    type="textarea" 
+                    rows="3" 
+                />
 
                 {{-- Dynamic Options Section --}}
                 <div id="options-section">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Options</label>
+                    <label class="block text-sm font-medium text-[var(--text-secondary)] mb-2">Options</label>
                     <div id="options-container" class="space-y-3">
                         {{-- Options rendered dynamically --}}
                     </div>
-                    <button type="button" id="add-option-btn" onclick="addOptionRow()"
-                        class="mt-3 px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors hidden">
+                    <button type="button" id="add-option-btn" onclick="addOptionRow()" class="mt-3 btn-secondary hidden">
                         + Add Option
                     </button>
                 </div>
 
                 {{-- Action Buttons --}}
-                <div class="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
-                    <button type="submit"
-                        class="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition-colors">Save
-                        Question</button>
-                    <button type="button" onclick="goBack()"
-                        class="px-6 py-2 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors">Cancel</button>
+                <div class="flex gap-3 pt-4 border-t border-[var(--border-color)]">
+                    <button type="submit" class="btn-primary">Save Question</button>
+                    <button type="button" onclick="goBack()" class="btn-secondary">Cancel</button>
                 </div>
             </form>
         </div>
@@ -157,11 +152,13 @@
                 selectedType = type;
                 document.querySelectorAll('.type-btn').forEach(btn => {
                     if (btn.dataset.type === type) {
-                        btn.classList.remove('border-gray-300', 'dark:border-gray-600', 'bg-white', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-300');
-                        btn.classList.add('border-indigo-600', 'bg-indigo-50', 'dark:bg-indigo-900', 'text-indigo-700', 'dark:text-indigo-300');
+                        btn.style.borderColor = 'var(--accent)';
+                        btn.style.backgroundColor = 'var(--accent-light)';
+                        btn.style.color = 'var(--accent)';
                     } else {
-                        btn.classList.remove('border-indigo-600', 'bg-indigo-50', 'dark:bg-indigo-900', 'text-indigo-700', 'dark:text-indigo-300');
-                        btn.classList.add('border-gray-300', 'dark:border-gray-600', 'bg-white', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-300');
+                        btn.style.borderColor = 'var(--border-color)';
+                        btn.style.backgroundColor = 'var(--bg-surface)';
+                        btn.style.color = 'var(--text-secondary)';
                     }
                 });
 
@@ -203,25 +200,25 @@
                 container.innerHTML = options.map((opt, idx) => {
                     let correctInput = '';
                     if (selectedType === 'SINGLE_CHOICE') {
-                        correctInput = `<input type="radio" name="correct-option" ${opt.is_correct ? 'checked' : ''} onchange="setCorrectSingle(${idx})" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 dark:border-gray-600">`;
+                        correctInput = `<input type="radio" name="correct-option" ${opt.is_correct ? 'checked' : ''} onchange="setCorrectSingle(${idx})" style="accent-color: var(--accent);" class="h-4 w-4">`;
                     } else if (selectedType === 'MULTIPLE_CHOICE') {
-                        correctInput = `<input type="checkbox" ${opt.is_correct ? 'checked' : ''} onchange="toggleCorrectMultiple(${idx})" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 dark:border-gray-600 rounded">`;
+                        correctInput = `<input type="checkbox" ${opt.is_correct ? 'checked' : ''} onchange="toggleCorrectMultiple(${idx})" style="accent-color: var(--accent);" class="h-4 w-4 rounded">`;
                     } else if (selectedType === 'TRUE_FALSE') {
-                        correctInput = `<input type="radio" name="correct-option" ${opt.is_correct ? 'checked' : ''} onchange="setCorrectSingle(${idx})" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 dark:border-gray-600">`;
+                        correctInput = `<input type="radio" name="correct-option" ${opt.is_correct ? 'checked' : ''} onchange="setCorrectSingle(${idx})" style="accent-color: var(--accent);" class="h-4 w-4">`;
                     }
 
                     const isFixed = selectedType === 'TRUE_FALSE';
                     const removeBtn = !isFixed && options.length > 2
-                        ? `<button type="button" onclick="removeOptionRow(${idx})" class="px-2 py-1 text-xs bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 rounded hover:bg-red-200 dark:hover:bg-red-800 transition-colors">Remove</button>`
+                        ? `<button type="button" onclick="removeOptionRow(${idx})" class="btn-ghost btn-sm text-[var(--danger)]">Remove</button>`
                         : '';
 
                     return `
-                    <div class="flex items-center gap-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
-                        <span class="text-sm font-bold text-indigo-600 dark:text-indigo-400 w-6">${escHtml(opt.label)}</span>
+                    <div class="flex items-center gap-3 bg-[var(--bg-surface)] rounded-lg p-3 border border-[var(--border-color)]">
+                        <span class="text-sm font-bold text-[var(--accent)] w-6">${escHtml(opt.label)}</span>
                         ${correctInput}
                         <input type="text" value="${escHtml(opt.content)}" onchange="updateOptionContent(${idx}, this.value)"
                             ${isFixed ? 'readonly' : ''}
-                            class="flex-1 px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 ${isFixed ? 'bg-gray-100 dark:bg-gray-600 cursor-default' : 'bg-white dark:bg-gray-700'} text-gray-900 dark:text-gray-100 text-sm focus:ring-2 focus:ring-indigo-500"
+                            class="flex-1 input-field ${isFixed ? 'bg-[var(--bg-hover)] cursor-default' : ''}"
                             placeholder="${isFixed ? opt.content : 'Option content...'}">
                         ${removeBtn}
                     </div>`;
@@ -269,7 +266,7 @@
             // Image handling
             window.handleImageDrop = async function (event) {
                 event.preventDefault();
-                event.currentTarget.classList.remove('border-indigo-400', 'dark:border-indigo-500');
+                event.currentTarget.style.borderColor = 'var(--border-color)';
                 const file = event.dataTransfer.files[0];
                 if (file && file.type.startsWith('image/')) {
                     await uploadImage(file);
@@ -311,7 +308,7 @@
                     document.getElementById('image-preview-container').classList.remove('hidden');
                     document.getElementById('image-upload-area').classList.add('hidden');
                 } catch (err) {
-                    alert('Image upload error: ' + err.message);
+                    showToast('Image upload error: ' + err.message, 'error');
                 }
             }
 
@@ -339,13 +336,13 @@
                 try {
                     // Fetch question - we need to find it from the tryout questions
                     if (!tryoutId) {
-                        alert('Tryout ID not found');
+                        showToast('Tryout ID not found', 'error');
                         return;
                     }
                     const questions = await apiFetch('/admin/tryouts/' + tryoutId + '/questions');
                     const question = questions.find(q => q.id == questionId);
                     if (!question) {
-                        alert('Question not found');
+                        showToast('Question not found', 'error');
                         goBack();
                         return;
                     }
@@ -377,7 +374,7 @@
                         renderOptions();
                     }
                 } catch (err) {
-                    alert('Error loading question: ' + err.message);
+                    showToast('Error loading question: ' + err.message, 'error');
                 }
             }
 
@@ -386,7 +383,7 @@
                 e.preventDefault();
 
                 if (!selectedType) {
-                    alert('Please select a question type');
+                    showToast('Please select a question type', 'warning');
                     return;
                 }
 
@@ -394,7 +391,7 @@
                 if (selectedType !== 'TRUE_FALSE') {
                     const emptyOptions = options.filter(o => !o.content.trim());
                     if (emptyOptions.length) {
-                        alert('All options must have content');
+                        showToast('All options must have content', 'warning');
                         return;
                     }
                 }
@@ -402,7 +399,7 @@
                 // Validate at least one correct answer
                 const hasCorrect = options.some(o => o.is_correct);
                 if (!hasCorrect) {
-                    alert('At least one option must be marked as correct');
+                    showToast('At least one option must be marked as correct', 'warning');
                     return;
                 }
 
@@ -437,17 +434,17 @@
                             method: 'PATCH',
                             body: JSON.stringify(payload),
                         });
-                        alert('Soal berhasil diupdate!');
+                        showToast('Soal berhasil diupdate!', 'success');
                     } else {
                         await apiFetch('/admin/questions', {
                             method: 'POST',
                             body: JSON.stringify(payload),
                         });
-                        alert('Soal berhasil dibuat!');
+                        showToast('Soal berhasil dibuat!', 'success');
                     }
                     goBack();
                 } catch (err) {
-                    alert('Error: ' + err.message);
+                    showToast(err.message, 'error');
                 }
             });
 

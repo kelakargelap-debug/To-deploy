@@ -116,9 +116,14 @@ class UserDashboardController extends Controller
         $tryouts = $query->get();
 
         $enriched = $tryouts->map(function ($tryout) use ($user) {
-            $userAttempt = Attempt::where('user_id', $user->id)
+            $latestAttempt = Attempt::where('user_id', $user->id)
                 ->where('tryout_id', $tryout->id)
+                ->orderByDesc('started_at')
                 ->first();
+
+            $attemptCount = Attempt::where('user_id', $user->id)
+                ->where('tryout_id', $tryout->id)
+                ->count();
 
             return [
                 'id' => $tryout->id,
@@ -134,9 +139,10 @@ class UserDashboardController extends Controller
                 'passing_score' => $tryout->passing_score,
                 'randomize_order' => $tryout->randomize_order,
                 'show_result' => $tryout->show_result,
-                'attemptStatus' => $userAttempt ? $userAttempt->status : null,
-                'attemptScore' => $userAttempt ? $userAttempt->score : null,
-                'attemptId' => $userAttempt ? $userAttempt->id : null,
+                'attemptStatus' => $latestAttempt ? $latestAttempt->status : null,
+                'attemptScore' => $latestAttempt ? $latestAttempt->score : null,
+                'attemptId' => $latestAttempt ? $latestAttempt->id : null,
+                'attemptCount' => $attemptCount,
             ];
         });
 
@@ -211,48 +217,50 @@ class UserDashboardController extends Controller
             ], 400);
         }
 
-        // Check existing attempt for this tryout
-        $existing = Attempt::where('user_id', $user->id)
+        // Auto-submit any expired IN_PROGRESS attempts for this tryout
+        $expiredAttempts = Attempt::where('user_id', $user->id)
             ->where('tryout_id', $tryout->id)
+            ->where('status', 'IN_PROGRESS')
+            ->where('expires_at', '<', now())
+            ->get();
+
+        foreach ($expiredAttempts as $expired) {
+            $this->autoSubmitExpiredAttempt($expired, $tryout);
+        }
+
+        // Check for an active IN_PROGRESS attempt to resume
+        $activeAttempt = Attempt::where('user_id', $user->id)
+            ->where('tryout_id', $tryout->id)
+            ->where('status', 'IN_PROGRESS')
+            ->where('expires_at', '>', now())
             ->first();
 
-        if ($existing) {
-            // Already submitted
-            if ($existing->status === 'SUBMITTED') {
-                return response()->json(['error' => 'Anda sudah merampungkan tryout ini dan mengumpulkan jawaban.'], 409);
-            }
-
-            // Expired - auto-submit
-            if ($existing->status === 'EXPIRED' || $existing->expires_at < now()) {
-                $this->autoSubmitExpiredAttempt($existing, $tryout);
-                return response()->json(['error' => 'Sesi waktu tryout sebelumnya sudah berakhir dan dinilai automatis.'], 409);
-            }
-
+        if ($activeAttempt) {
             // Resume running session
-            if ($existing->status === 'IN_PROGRESS' && $existing->expires_at > now()) {
-                $savedAnswers = [];
-                $doubtAnswers = [];
-                $attemptAnswers = Answer::where('attempt_id', $existing->id)->get();
-                foreach ($attemptAnswers as $ans) {
-                    $savedAnswers[$ans->question_id] = $ans->selected_opts;
-                    $doubtAnswers[$ans->question_id] = $ans->is_doubt;
-                }
-
-                return response()->json([
-                    'attemptId' => $existing->id,
-                    'expiresAt' => $existing->expires_at->toIso8601String(),
-                    'isResume' => true,
-                    'snapshot' => [
-                        'attemptId' => $existing->id,
-                        'questionOrder' => $existing->snapshot ? $existing->snapshot['questionOrder'] : [],
-                        'currentIndex' => $existing->snapshot ? $existing->snapshot['currentIndex'] : 0,
-                        'savedAnswers' => $savedAnswers,
-                        'doubtAnswers' => $doubtAnswers,
-                        'expiresAt' => $existing->expires_at->toIso8601String(),
-                    ],
-                ]);
+            $savedAnswers = [];
+            $doubtAnswers = [];
+            $attemptAnswers = Answer::where('attempt_id', $activeAttempt->id)->get();
+            foreach ($attemptAnswers as $ans) {
+                $savedAnswers[$ans->question_id] = $ans->selected_opts;
+                $doubtAnswers[$ans->question_id] = $ans->is_doubt;
             }
+
+            return response()->json([
+                'attemptId' => $activeAttempt->id,
+                'expiresAt' => $activeAttempt->expires_at->toIso8601String(),
+                'isResume' => true,
+                'snapshot' => [
+                    'attemptId' => $activeAttempt->id,
+                    'questionOrder' => $activeAttempt->snapshot ? $activeAttempt->snapshot['questionOrder'] : [],
+                    'currentIndex' => $activeAttempt->snapshot ? $activeAttempt->snapshot['currentIndex'] : 0,
+                    'savedAnswers' => $savedAnswers,
+                    'doubtAnswers' => $doubtAnswers,
+                    'expiresAt' => $activeAttempt->expires_at->toIso8601String(),
+                ],
+            ]);
         }
+
+        // No active attempt — user can start a new one (even if they have past SUBMITTED attempts)
 
         // Verify tryout has questions
         $questionsList = Question::where('tryout_id', $tryout->id)->get();

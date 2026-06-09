@@ -1,57 +1,43 @@
 @extends('app')
 @section('content')
-    <div class="p-6 max-w-7xl mx-auto">
-        <div class="flex items-center justify-between mb-6">
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Tryout Management</h1>
-            <button onclick="navigateTo('/admin/tryouts/create')"
-                class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition-colors">
-                + Tambah Tryout
-            </button>
-        </div>
+    <div class="max-w-7xl mx-auto">
+        <x-page-header title="Tryout Management" subtitle="Kelola daftar tryout yang tersedia">
+            <x-slot:action>
+                <button onclick="navigateTo('/admin/tryouts/create')" class="btn-primary">
+                    + Tambah Tryout
+                </button>
+            </x-slot:action>
+        </x-page-header>
 
         {{-- Tryouts Table --}}
-        <div
-            class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 overflow-hidden">
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm">
-                    <thead>
-                        <tr class="bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
-                            <th class="px-5 py-3 text-left font-medium">Title</th>
-                            <th class="px-5 py-3 text-left font-medium">Category</th>
-                            <th class="px-5 py-3 text-left font-medium">Status</th>
-                            <th class="px-5 py-3 text-left font-medium">Tier</th>
-                            <th class="px-5 py-3 text-left font-medium">Questions</th>
-                            <th class="px-5 py-3 text-left font-medium">Duration</th>
-                            <th class="px-5 py-3 text-left font-medium">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tryouts-table-body" class="divide-y divide-gray-200 dark:divide-gray-600">
-                        <tr>
-                            <td class="px-5 py-4 text-gray-500 dark:text-gray-400" colspan="7">Loading...</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        <x-data-table>
+            <table class="w-full">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Tier</th>
+                        <th>Questions</th>
+                        <th>Duration</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="tryouts-table-body">
+                    <tr><td colspan="7" class="text-center">Loading...</td></tr>
+                </tbody>
+            </table>
+        </x-data-table>
     </div>
 
     {{-- Delete Confirmation Modal --}}
-    <div id="delete-tryout-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center">
-        <div class="absolute inset-0 bg-black/50" onclick="closeDeleteTryoutModal()"></div>
-        <div
-            class="relative bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md mx-4 border border-gray-200 dark:border-gray-700">
-            <h3 class="text-lg font-semibold text-red-600 dark:text-red-400 mb-4">Delete Tryout</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Are you sure you want to delete: <span
-                    id="delete-tryout-title" class="font-medium text-gray-900 dark:text-gray-100"></span>? This will also
-                delete all associated questions and attempts.</p>
-            <div class="flex gap-3 justify-end">
-                <button onclick="closeDeleteTryoutModal()"
-                    class="px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors">Cancel</button>
-                <button onclick="submitDeleteTryout()"
-                    class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors">Delete</button>
-            </div>
+    <x-modal id="delete-tryout-modal" title="Delete Tryout" size="sm">
+        <p class="text-sm text-[var(--text-secondary)] mb-4">Are you sure you want to delete: <span id="delete-tryout-title" class="font-bold text-[var(--text-primary)]"></span>? This will also delete all associated questions and attempts.</p>
+        <div class="flex gap-3 justify-end">
+            <button data-modal-close="delete-tryout-modal" class="btn-secondary">Cancel</button>
+            <button onclick="submitDeleteTryout()" class="btn-danger">Delete</button>
         </div>
-    </div>
+    </x-modal>
 @endsection
 
 @push('scripts')
@@ -68,16 +54,15 @@
             }
 
             function statusBadge(status) {
-                const cls = status === 'PUBLISHED' ? 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300'
-                    : status === 'DRAFT' ? 'bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300'
-                        : 'bg-gray-100 dark:bg-gray-600 text-gray-600 dark:text-gray-300';
-                return '<span class="px-2 py-1 rounded text-xs font-medium ' + cls + '">' + status + '</span>';
+                const cls = status === 'PUBLISHED' ? 'badge-success'
+                    : status === 'DRAFT' ? 'badge-warning'
+                        : 'badge-free';
+                return '<span class="badge ' + cls + '">' + status + '</span>';
             }
 
             function tierBadge(tier) {
-                const cls = tier === 'PREMIUM' ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300'
-                    : 'bg-gray-100 dark:bg-gray-600 text-gray-600 dark:text-gray-300';
-                return '<span class="px-2 py-1 rounded text-xs font-medium ' + cls + '">' + tier + '</span>';
+                const cls = tier === 'PREMIUM' ? 'badge-premium' : 'badge-free';
+                return '<span class="badge ' + cls + '">' + tier + '</span>';
             }
 
             function getCategoryName(catId) {
@@ -98,24 +83,24 @@
 
                     if (tryouts && tryouts.length) {
                         tbody.innerHTML = tryouts.map(t => {
-                            return '<tr class="hover:bg-gray-50 dark:hover:bg-gray-700">'
-                                + '<td class="px-5 py-4 text-gray-900 dark:text-gray-100 font-medium">' + escHtml(t.title) + '</td>'
-                                + '<td class="px-5 py-4 text-gray-600 dark:text-gray-400">' + escHtml(getCategoryName(t.category_id)) + '</td>'
-                                + '<td class="px-5 py-4">' + statusBadge(t.status) + '</td>'
-                                + '<td class="px-5 py-4">' + tierBadge(t.required_tier) + '</td>'
-                                + '<td class="px-5 py-4 text-gray-900 dark:text-gray-100">' + t.total_questions + '</td>'
-                                + '<td class="px-5 py-4 text-gray-900 dark:text-gray-100">' + t.duration_minutes + ' min</td>'
-                                + '<td class="px-5 py-4">'
+                            return '<tr>'
+                                + '<td><span class="font-medium text-[var(--text-primary)]">' + escHtml(t.title) + '</span></td>'
+                                + '<td>' + escHtml(getCategoryName(t.category_id)) + '</td>'
+                                + '<td>' + statusBadge(t.status) + '</td>'
+                                + '<td>' + tierBadge(t.required_tier) + '</td>'
+                                + '<td><span class="font-mono font-bold">' + t.total_questions + '</span></td>'
+                                + '<td>' + t.duration_minutes + ' min</td>'
+                                + '<td>'
                                 + '<div class="flex gap-2">'
-                                + '<button onclick="navigateTo(\'/admin/tryouts/' + t.id + '/questions\')" class="px-2 py-1 text-xs bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 rounded hover:bg-emerald-200 dark:hover:bg-emerald-800 transition-colors">Questions</button>'
-                                + '<button onclick="navigateTo(\'/admin/tryouts/' + t.id + '/edit\')" class="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors">Edit</button>'
-                                + '<button onclick="openDeleteTryoutModal(' + t.id + ', \'' + escHtml(t.title) + '\')" class="px-2 py-1 text-xs bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 rounded hover:bg-red-200 dark:hover:bg-red-800 transition-colors">Delete</button>'
+                                + '<button onclick="navigateTo(\'/admin/tryouts/' + t.id + '/questions\')" class="btn-ghost btn-sm text-[var(--success)]">Questions</button>'
+                                + '<button onclick="navigateTo(\'/admin/tryouts/' + t.id + '/edit\')" class="btn-ghost btn-sm text-[var(--info)]">Edit</button>'
+                                + '<button onclick="openDeleteTryoutModal(' + t.id + ', \'' + escHtml(t.title) + '\')" class="btn-ghost btn-sm text-[var(--danger)]">Delete</button>'
                                 + '</div>'
                                 + '</td>'
                                 + '</tr>';
                         }).join('');
                     } else {
-                        tbody.innerHTML = '<tr><td class="px-5 py-4 text-gray-500" colspan="7">No tryouts found</td></tr>';
+                        tbody.innerHTML = '<tr><td colspan="7" class="text-center text-[var(--text-muted)]">No tryouts found</td></tr>';
                     }
                 } catch (err) {
                     tbody.innerHTML = '<tr><td class="px-5 py-4 text-red-500" colspan="7">Error: ' + escHtml(err.message) + '</td></tr>';
@@ -126,22 +111,17 @@
             window.openDeleteTryoutModal = function (tryoutId, tryoutTitle) {
                 deleteTryoutId = tryoutId;
                 document.getElementById('delete-tryout-title').textContent = tryoutTitle;
-                document.getElementById('delete-tryout-modal').classList.remove('hidden');
-            };
-
-            window.closeDeleteTryoutModal = function () {
-                document.getElementById('delete-tryout-modal').classList.add('hidden');
-                deleteTryoutId = null;
+                openModal('delete-tryout-modal');
             };
 
             window.submitDeleteTryout = async function () {
                 try {
                     await apiFetch('/admin/tryouts/' + deleteTryoutId, { method: 'DELETE' });
-                    alert('Tryout berhasil dihapus!');
-                    closeDeleteTryoutModal();
+                    showToast('Tryout berhasil dihapus!', 'success');
+                    closeModal('delete-tryout-modal');
                     loadData();
                 } catch (err) {
-                    alert('Error: ' + err.message);
+                    showToast(err.message, 'error');
                 }
             };
 

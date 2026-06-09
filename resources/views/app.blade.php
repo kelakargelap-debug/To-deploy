@@ -7,9 +7,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SKB Tryout — Platform Tryout Online</title>
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=geist:400,500,600,700" rel="stylesheet" />
-    <link href="https://fonts.bunny.net/css?family=geist-mono:400,500" rel="stylesheet" />
+    <!-- Google Fonts: Manrope -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Material Symbols Outlined -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script>
@@ -52,6 +55,11 @@
             return response.json();
         }
 
+        // ---- Navigate With Progress ----
+        function navigateTo(url) {
+            window.location.href = url;
+        }
+
         // ---- Dark mode toggle ----
         async function toggleDarkMode() {
             var form = document.createElement('form');
@@ -87,10 +95,30 @@
         function closeMobileSidebar() {
             document.getElementById('mobile-sidebar-overlay').classList.add('hidden');
         }
+
+        // ---- Modals ----
+        window.openModal = function(id) {
+            var el = document.getElementById(id);
+            if (el) el.classList.remove('hidden');
+        };
+
+        window.closeModal = function(id) {
+            var el = document.getElementById(id);
+            if (el) el.classList.add('hidden');
+        };
+
+        // data-modal-close attribute handler
+        document.addEventListener('click', function(e) {
+            var btn = e.target.closest('[data-modal-close]');
+            if (btn) {
+                var modalId = btn.getAttribute('data-modal-close');
+                closeModal(modalId);
+            }
+        });
     </script>
 </head>
 
-<body class="font-sans antialiased min-h-screen" style="background: var(--bg-canvas); color: var(--text-primary);">
+<body class="font-sans antialiased min-h-screen" style="background: var(--md-background); color: var(--md-on-surface);">
     <div id="app">
         {{-- SIDEBAR — fixed left --}}
         <x-sidebar />
@@ -101,30 +129,25 @@
 
             {{-- TOP HEADER BAR --}}
             @auth
-                <header class="top-header flex items-center justify-between px-5">
-                    <div class="flex items-center gap-3">
+                <header class="top-header flex items-center justify-between px-6">
+                    <div class="flex items-center gap-4">
                         {{-- Mobile hamburger --}}
                         <button id="mobile-menu-btn"
-                            class="md:hidden p-1 rounded-md hover:bg-[var(--bg-subtle)] text-[var(--text-secondary)]"
+                            class="md:hidden p-2 rounded-full hover:bg-[var(--md-surface-container-high)] text-[var(--md-on-surface-variant)] transition-colors duration-200"
                             onclick="toggleMobileSidebar()">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="3" y1="6" x2="21" y2="6" />
-                                <line x1="3" y1="12" x2="21" y2="12" />
-                                <line x1="3" y1="18" x2="21" y2="18" />
-                            </svg>
+                            <span class="material-symbols-outlined">menu</span>
                         </button>
-                        <span class="text-sm font-medium text-[var(--text-primary)]">SKB Tryout</span>
+                        <h1 class="text-headline-sm font-bold" style="color: var(--md-primary);">SKB Tryout</h1>
                     </div>
 
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-3">
                         {{-- User name + role --}}
-                        <span class="text-[13px] text-[var(--text-secondary)] hidden sm:block">
+                        <span class="text-label-md hidden sm:flex items-center gap-2" style="color: var(--md-on-surface);">
                             {{ Auth::user()->name }}
-                            <span class="ml-1 px-1.5 py-0.5 rounded-full text-[11px] font-medium
-                                @if(Auth::user()->role === 'SUPERADMIN') bg-[var(--danger-subtle)] text-[var(--danger)]
-                                @elseif(Auth::user()->role === 'ADMIN') bg-[var(--accent-subtle)] text-[var(--accent)]
-                                @else bg-[var(--bg-subtle)] text-[var(--text-secondary)]
+                            <span class="px-2 py-0.5 rounded text-label-sm font-semibold
+                                @if(Auth::user()->role === 'SUPERADMIN') bg-[var(--md-error-container)] text-[var(--md-on-error-container)]
+                                @elseif(Auth::user()->role === 'ADMIN') bg-[var(--md-primary-fixed)] text-[var(--md-on-primary-fixed-variant)]
+                                @else bg-[var(--md-surface-container)] text-[var(--md-on-surface-variant)]
                                 @endif">
                                 {{ Auth::user()->role }}
                             </span>
@@ -132,41 +155,21 @@
 
                         {{-- Dark mode toggle --}}
                         <button onclick="toggleDarkMode()"
-                            class="p-1.5 rounded-md hover:bg-[var(--bg-subtle)] text-[var(--text-secondary)]" title="Mode">
-                            <svg id="dark-mode-icon-sun"
-                                class="w-[18px] h-[18px] @if(!session('dark_mode', false)) hidden @endif"
-                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="5" />
-                                <line x1="12" y1="1" x2="12" y2="3" />
-                                <line x1="12" y1="21" x2="12" y2="23" />
-                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                                <line x1="1" y1="12" x2="3" y2="12" />
-                                <line x1="21" y1="12" x2="23" y2="12" />
-                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-                                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-                            </svg>
-                            <svg id="dark-mode-icon-moon"
-                                class="w-[18px] h-[18px] @if(session('dark_mode', false)) hidden @endif" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
-                            </svg>
+                            class="p-2 rounded-full hover:bg-[var(--md-surface-container-high)] transition-colors duration-200"
+                            style="color: var(--md-on-surface-variant);" title="Mode">
+                            <span class="material-symbols-outlined">
+                                @if(session('dark_mode', false)) light_mode @else dark_mode @endif
+                            </span>
                         </button>
 
                         {{-- Logout --}}
                         <form method="POST" action="{{ route('logout') }}" class="inline">
                             @csrf
                             <button type="submit"
-                                class="p-1.5 rounded-md hover:bg-[var(--danger-subtle)] text-[var(--text-secondary)] hover:text-[var(--danger)]"
+                                class="p-2 rounded-full hover:bg-[var(--md-error-container)] transition-colors duration-200"
+                                style="color: var(--md-on-surface-variant);"
                                 title="Keluar">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
-                                    <polyline points="16 17 21 12 16 7" />
-                                    <line x1="21" y1="12" x2="9" y2="12" />
-                                </svg>
+                                <span class="material-symbols-outlined">logout</span>
                             </button>
                         </form>
                     </div>
@@ -174,16 +177,19 @@
             @endauth
 
             {{-- MAIN CONTENT --}}
-            <main id="main-content" class="flex-1 @auth p-6 sm:p-8 @endauth">
+            <main id="main-content" class="flex-1 @auth p-4 sm:p-6 @endauth animate-fade-in-up" style="background: var(--md-background);">
                 @yield('content')
             </main>
         </div>
     </div>
 
+    {{-- Toast Notification Container --}}
+    <x-toast />
+
     {{-- Mobile sidebar overlay --}}
     <div id="mobile-sidebar-overlay" class="hidden fixed inset-0 z-50 md:hidden">
         <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeMobileSidebar()"></div>
-        <div id="mobile-sidebar-drawer" class="relative w-64 bg-[var(--bg-surface)] h-full overflow-y-auto">
+        <div id="mobile-sidebar-drawer" class="relative w-64 h-full overflow-y-auto" style="background: var(--md-surface-container-low);">
             {{-- Cloned sidebar content injected via JS --}}
         </div>
     </div>

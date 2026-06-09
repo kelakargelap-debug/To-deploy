@@ -1,98 +1,119 @@
 @extends('app')
 
 @section('content')
-    <div class="min-h-screen flex items-center justify-center px-4" style="background: var(--bg-canvas);">
-        <div class="w-full max-w-[360px]">
-            {{-- Card --}}
-            <div class="rounded-lg p-6 sm:p-8"
-                style="background: var(--bg-surface); border: 1px solid var(--border-subtle);">
-                {{-- Title --}}
-                <h1 class="text-xl font-medium tracking-[-0.025em] text-center mb-5"
-                    style="color: var(--text-primary); letter-spacing: -0.025em;">Platform Tryout SKB</h1>
+    <div class="min-h-screen flex items-center justify-center px-4" style="background: var(--md-background);">
+        <div class="w-full max-w-[420px] animate-fade-in-up">
+            <!-- Branding area -->
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg"
+                    style="background: var(--md-primary); color: var(--md-on-primary);">
+                    <span class="material-symbols-outlined text-3xl" data-weight="fill">school</span>
+                </div>
+                <h1 class="text-display-lg" style="color: var(--md-on-surface);">SKB Tryout</h1>
+                <p class="text-body-md mt-1" style="color: var(--md-on-surface-variant);">Platform ujian kompetensi cerdas</p>
+            </div>
 
+            {{-- Card --}}
+            <div class="card p-6 sm:p-8">
                 {{-- Error messages --}}
                 @if($errors->any())
-                    <div class="mb-4 p-2.5 rounded-md text-[13px]"
-                        style="background: var(--danger-subtle); border: 1px solid var(--danger); color: var(--danger);">
-                        {{ $errors->first() }}
+                    <div class="mb-5">
+                        <x-alert type="danger" :message="$errors->first()" />
                     </div>
                 @endif
 
                 @if(session('error'))
-                    <div class="mb-4 p-2.5 rounded-md text-[13px]"
-                        style="background: var(--danger-subtle); border: 1px solid var(--danger); color: var(--danger);">
-                        {{ session('error') }}
+                    <div class="mb-5">
+                        <x-alert type="danger" :message="session('error')" />
                     </div>
                 @endif
 
                 {{-- Login Form --}}
-                <div id="login-section">
-                    <p class="text-[13px] mb-4" style="color: var(--text-secondary);">Masuk ke akun Anda untuk melanjutkan.
-                    </p>
-                    <form method="POST" action="{{ route('login') }}">
+                <div id="login-section" class="animate-fade-in-up" style="animation-duration: 0.3s;">
+                    <form method="POST" action="{{ route('login') }}" class="space-y-5">
                         @csrf
-                        <div class="mb-3">
-                            <label for="email" class="block text-[12px] font-medium mb-1"
-                                style="color: var(--text-secondary);">Email</label>
-                            <input type="email" name="email" id="email" class="input-field" placeholder="email@contoh.com"
-                                required autocomplete="email" value="{{ old('email') }}">
-                        </div>
-                        <div class="mb-4">
-                            <label for="password" class="block text-[12px] font-medium mb-1"
-                                style="color: var(--text-secondary);">Password</label>
-                            <input type="password" name="password" id="password" class="input-field"
-                                placeholder="Masukkan password" required autocomplete="current-password">
-                        </div>
-                        <button type="submit"
-                            class="w-full h-10 rounded-md text-[14px] font-medium transition-opacity hover:opacity-90 disabled:opacity-45"
-                            style="background: var(--text-primary); color: var(--text-inverse);">Masuk</button>
+                        <x-form-field 
+                            id="email" 
+                            label="Email" 
+                            type="email" 
+                            placeholder="email@contoh.com" 
+                            required="true" 
+                            :value="old('email')"
+                            autocomplete="email"
+                        />
+                        
+                        <x-form-field 
+                            id="password" 
+                            label="Password" 
+                            type="password" 
+                            placeholder="Masukkan password" 
+                            required="true" 
+                            autocomplete="current-password"
+                        />
+                        
+                        <button type="submit" class="w-full btn-primary mt-2">
+                            <span class="material-symbols-outlined text-lg">login</span>
+                            Masuk
+                        </button>
                     </form>
 
-                    <p class="mt-4 text-center text-[13px]" style="color: var(--text-secondary);">
+                    <p class="mt-6 text-center text-body-md" style="color: var(--md-on-surface-variant);">
                         Belum punya akun?
-                        <button onclick="toggleForm('register')" class="font-medium hover:underline"
-                            style="color: var(--accent);">Daftar Akun Baru</button>
+                        <button onclick="toggleForm('register')" class="font-bold hover:underline" style="color: var(--md-primary);">Daftar Sekarang</button>
                     </p>
                 </div>
 
                 {{-- Register Form (hidden by default) --}}
-                <div id="register-section" class="hidden">
-                    <p class="text-[13px] mb-4" style="color: var(--text-secondary);">Buat akun baru untuk memulai.</p>
-                    <form method="POST" action="{{ route('register') }}">
+                <div id="register-section" class="hidden animate-fade-in-up" style="animation-duration: 0.3s;">
+                    <form method="POST" action="{{ route('register') }}" class="space-y-5">
                         @csrf
-                        <div class="mb-3">
-                            <label for="reg-name" class="block text-[12px] font-medium mb-1"
-                                style="color: var(--text-secondary);">Nama Lengkap</label>
-                            <input type="text" name="name" id="reg-name" class="input-field" placeholder="Nama lengkap"
-                                required autocomplete="name" value="{{ old('name') }}">
-                        </div>
-                        <div class="mb-3">
-                            <label for="reg-email" class="block text-[12px] font-medium mb-1"
-                                style="color: var(--text-secondary);">Email</label>
-                            <input type="email" name="email" id="reg-email" class="input-field"
-                                placeholder="email@contoh.com" required autocomplete="email">
-                        </div>
-                        <div class="mb-4">
-                            <label for="reg-password" class="block text-[12px] font-medium mb-1"
-                                style="color: var(--text-secondary);">Password</label>
-                            <input type="password" name="password" id="reg-password" class="input-field"
-                                placeholder="Minimal 5 karakter" required minlength="5" autocomplete="new-password">
-                        </div>
-                        <button type="submit"
-                            class="w-full h-10 rounded-md text-[14px] font-medium transition-opacity hover:opacity-90 disabled:opacity-45"
-                            style="background: var(--text-primary); color: var(--text-inverse);">Daftar</button>
+                        <x-form-field 
+                            id="reg-name" 
+                            name="name"
+                            label="Nama Lengkap" 
+                            type="text" 
+                            placeholder="Nama lengkap" 
+                            required="true" 
+                            :value="old('name')"
+                            autocomplete="name"
+                        />
+                        
+                        <x-form-field 
+                            id="reg-email" 
+                            name="email"
+                            label="Email" 
+                            type="email" 
+                            placeholder="email@contoh.com" 
+                            required="true" 
+                            autocomplete="email"
+                        />
+                        
+                        <x-form-field 
+                            id="reg-password" 
+                            name="password"
+                            label="Password" 
+                            type="password" 
+                            placeholder="Minimal 5 karakter" 
+                            required="true" 
+                            minlength="5"
+                            autocomplete="new-password"
+                        />
+                        
+                        <button type="submit" class="w-full btn-primary mt-2">
+                            <span class="material-symbols-outlined text-lg">person_add</span>
+                            Daftar Akun
+                        </button>
                     </form>
 
-                    <p class="mt-4 text-center text-[13px]" style="color: var(--text-secondary);">
+                    <p class="mt-6 text-center text-body-md" style="color: var(--md-on-surface-variant);">
                         Sudah terdaftar?
-                        <button onclick="toggleForm('login')" class="font-medium hover:underline"
-                            style="color: var(--accent);">Masuk Sekarang</button>
+                        <button onclick="toggleForm('login')" class="font-bold hover:underline" style="color: var(--md-primary);">Masuk Sekarang</button>
                     </p>
                 </div>
             </div>
 
             {{-- Demo credentials hint --}}
-            <p class="text-center mt-6 text-[11px]" style="color: var(--text-muted);">
+            <p class="text-center mt-6 text-label-sm font-mono" style="color: var(--md-outline);">
                 Demo: superadmin@skbtryout.id / Admin@1234
             </p>
         </div>

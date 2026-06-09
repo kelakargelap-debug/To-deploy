@@ -1,165 +1,112 @@
 @auth
     <aside id="sidebar"
-        class="fixed left-0 top-0 h-full z-30 transition-all duration-200 flex flex-col overflow-hidden @if(session('sidebar_collapsed', false)) sidebar-collapsed @else sidebar-expanded @endif"
-        style="background: var(--bg-surface); border-right: 1px solid var(--border-subtle);">
+        class="fixed left-0 top-0 h-full z-30 transition-all duration-300 ease-in-out flex flex-col overflow-hidden @if(session('sidebar_collapsed', false)) sidebar-collapsed @else sidebar-expanded @endif"
+        style="background: var(--md-surface-container-low); border-right: 1px solid var(--md-outline-variant);">
 
         {{-- Logo area --}}
-        <div class="flex items-center gap-3 px-4 h-11 border-b shrink-0" style="border-color: var(--border-subtle);">
-            <div class="w-7 h-7 rounded-md flex items-center justify-center shrink-0"
-                style="background: var(--accent); color: white; font-size: 0.8rem; font-weight: 600;">
+        <div class="flex items-center gap-3 px-4 h-16 border-b shrink-0" style="border-color: var(--md-outline-variant);">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+                style="background: var(--md-primary); color: var(--md-on-primary); font-size: 0.8rem; font-weight: 700;">
                 S
             </div>
-            <span class="text-sm font-medium sidebar-text" style="color: var(--text-primary); white-space: nowrap;">SKB
-                Tryout</span>
+            <div class="sidebar-text">
+                <h2 class="text-headline-sm font-bold" style="color: var(--md-primary); white-space: nowrap;">SKB Tryout</h2>
+                <p class="text-label-sm" style="color: var(--md-outline); white-space: nowrap;">Examination Portal</p>
+            </div>
         </div>
 
-        {{-- User info (collapsed: hidden) --}}
-        <div class="px-4 py-3 border-b shrink-0 sidebar-text" style="border-color: var(--border-subtle);">
+        {{-- User info --}}
+        <div class="px-4 py-3 border-b shrink-0" style="border-color: var(--md-outline-variant);">
             <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-xs font-semibold"
-                    style="background: var(--accent-subtle); color: var(--accent);">
+                <div class="w-9 h-9 rounded-full flex items-center justify-center shrink-0 text-sm font-semibold"
+                    style="background: var(--md-surface-variant); color: var(--md-primary);">
                     {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                 </div>
-                <div class="min-w-0">
-                    <p class="text-[13px] font-medium truncate" style="color: var(--text-primary);">{{ Auth::user()->name }}
-                    </p>
-                    <p class="text-[11px] truncate" style="color: var(--text-muted);">{{ Auth::user()->email }}</p>
+                <div class="min-w-0 sidebar-text">
+                    <p class="text-label-md font-medium truncate" style="color: var(--md-on-surface);">{{ Auth::user()->name }}</p>
+                    <p class="text-label-sm truncate" style="color: var(--md-on-surface-variant);">{{ Auth::user()->email }}</p>
                 </div>
             </div>
         </div>
 
         {{-- Navigation --}}
-        <nav class="flex-1 overflow-y-auto py-2 px-3">
-            <p class="text-[10px] font-semibold uppercase tracking-wider px-3 py-1.5 sidebar-text"
-                style="color: var(--text-muted);">Menu</p>
+        <nav class="flex-1 overflow-y-auto py-3 px-2">
+            <p class="text-label-sm uppercase tracking-wider px-3 py-1.5 sidebar-text"
+                style="color: var(--md-outline);">Menu</p>
 
             <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                <svg class="w-[18px] h-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="3" width="7" height="7" />
-                    <rect x="14" y="3" width="7" height="7" />
-                    <rect x="14" y="14" width="7" height="7" />
-                    <rect x="3" y="14" width="7" height="7" />
-                </svg>
-                <span class="sidebar-text">Dashboard</span>
+                <span class="material-symbols-outlined text-xl shrink-0" @if(request()->routeIs('dashboard')) data-weight="fill" @endif>dashboard</span>
+                <span class="sidebar-text text-label-md">Dashboard</span>
             </a>
 
             <a href="{{ route('tryouts') }}"
                 class="nav-link {{ request()->routeIs('tryout*') && !request()->routeIs('tryout-result') ? 'active' : '' }}">
-                <svg class="w-[18px] h-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2" />
-                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
-                </svg>
-                <span class="sidebar-text">Tryout</span>
+                <span class="material-symbols-outlined text-xl shrink-0" @if(request()->routeIs('tryout*') && !request()->routeIs('tryout-result')) data-weight="fill" @endif>quiz</span>
+                <span class="sidebar-text text-label-md">Tryout</span>
             </a>
 
             <a href="{{ route('materials') }}" class="nav-link {{ request()->routeIs('material*') ? 'active' : '' }}">
-                <svg class="w-[18px] h-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M2 3h8a4 4 0 014 4v14" />
-                    <path d="M22 3H14a4 4 0 00-4 4v14" />
-                </svg>
-                <span class="sidebar-text">Materi</span>
+                <span class="material-symbols-outlined text-xl shrink-0" @if(request()->routeIs('material*')) data-weight="fill" @endif>book</span>
+                <span class="sidebar-text text-label-md">Materi</span>
             </a>
 
             <a href="{{ route('my-attempts') }}" class="nav-link {{ request()->routeIs('my-attempts') ? 'active' : '' }}">
-                <svg class="w-[18px] h-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
-                    <rect x="9" y="3" width="6" height="4" rx="1" />
-                    <path d="M9 14l2 2 4-4" />
-                </svg>
-                <span class="sidebar-text">Nilai Saya</span>
+                <span class="material-symbols-outlined text-xl shrink-0" @if(request()->routeIs('my-attempts')) data-weight="fill" @endif>analytics</span>
+                <span class="sidebar-text text-label-md">Nilai Saya</span>
             </a>
 
             <a href="{{ route('change-password') }}"
                 class="nav-link {{ request()->routeIs('change-password') ? 'active' : '' }}">
-                <svg class="w-[18px] h-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                    <path d="M7 11V7a5 5 0 0110 0v4" />
-                </svg>
-                <span class="sidebar-text">Ubah Password</span>
+                <span class="material-symbols-outlined text-xl shrink-0" @if(request()->routeIs('change-password')) data-weight="fill" @endif>lock</span>
+                <span class="sidebar-text text-label-md">Ubah Password</span>
             </a>
 
             <a href="{{ route('profile') }}" class="nav-link {{ request()->routeIs('profile') ? 'active' : '' }}">
-                <svg class="w-[18px] h-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
-                    <circle cx="12" cy="7" r="4" />
-                </svg>
-                <span class="sidebar-text">Profil</span>
+                <span class="material-symbols-outlined text-xl shrink-0" @if(request()->routeIs('profile')) data-weight="fill" @endif>person</span>
+                <span class="sidebar-text text-label-md">Profil</span>
             </a>
 
             @if(Auth::user()->isAdmin())
-                <p class="text-[10px] font-semibold uppercase tracking-wider px-3 py-1.5 mt-2 sidebar-text"
-                    style="color: var(--text-muted);">Admin</p>
+                <p class="text-label-sm uppercase tracking-wider px-3 py-1.5 mt-3 sidebar-text"
+                    style="color: var(--md-outline);">Admin</p>
 
                 <a href="{{ route('admin-dashboard') }}"
                     class="nav-link {{ request()->routeIs('admin-dashboard') ? 'active' : '' }}">
-                    <svg class="w-[18px] h-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="3" width="7" height="7" />
-                        <rect x="14" y="3" width="7" height="7" />
-                        <rect x="14" y="14" width="7" height="7" />
-                        <rect x="3" y="14" width="7" height="7" />
-                    </svg>
-                    <span class="sidebar-text">Dashboard Admin</span>
+                    <span class="material-symbols-outlined text-xl shrink-0" @if(request()->routeIs('admin-dashboard')) data-weight="fill" @endif>admin_panel_settings</span>
+                    <span class="sidebar-text text-label-md">Dashboard Admin</span>
                 </a>
 
                 <a href="{{ route('admin-users') }}" class="nav-link {{ request()->routeIs('admin-user*') ? 'active' : '' }}">
-                    <svg class="w-[18px] h-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-                        <circle cx="9" cy="7" r="4" />
-                        <path d="M23 21v-2a4 4 0 00-3-3.87" />
-                        <path d="M16 3.13a4 4 0 010 7.75" />
-                    </svg>
-                    <span class="sidebar-text">Kelola User</span>
+                    <span class="material-symbols-outlined text-xl shrink-0" @if(request()->routeIs('admin-user*')) data-weight="fill" @endif>group</span>
+                    <span class="sidebar-text text-label-md">Kelola User</span>
                 </a>
 
                 <a href="{{ route('admin-categories') }}"
                     class="nav-link {{ request()->routeIs('admin-categories') ? 'active' : '' }}">
-                    <svg class="w-[18px] h-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z" />
-                    </svg>
-                    <span class="sidebar-text">Kelola Kategori</span>
+                    <span class="material-symbols-outlined text-xl shrink-0" @if(request()->routeIs('admin-categories')) data-weight="fill" @endif>category</span>
+                    <span class="sidebar-text text-label-md">Kelola Kategori</span>
                 </a>
 
                 <a href="{{ route('admin-tryouts') }}"
                     class="nav-link {{ request()->routeIs('admin-tryout*') ? 'active' : '' }}">
-                    <svg class="w-[18px] h-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2" />
-                        <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
-                    </svg>
-                    <span class="sidebar-text">Kelola Tryout</span>
+                    <span class="material-symbols-outlined text-xl shrink-0" @if(request()->routeIs('admin-tryout*')) data-weight="fill" @endif>assignment</span>
+                    <span class="sidebar-text text-label-md">Kelola Tryout</span>
                 </a>
 
                 <a href="{{ route('admin-materials') }}"
                     class="nav-link {{ request()->routeIs('admin-material*') ? 'active' : '' }}">
-                    <svg class="w-[18px] h-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M2 3h8a4 4 0 014 4v14" />
-                        <path d="M22 3H14a4 4 0 00-4 4v14" />
-                    </svg>
-                    <span class="sidebar-text">Kelola Materi</span>
+                    <span class="material-symbols-outlined text-xl shrink-0" @if(request()->routeIs('admin-material*')) data-weight="fill" @endif>history_edu</span>
+                    <span class="sidebar-text text-label-md">Kelola Materi</span>
                 </a>
             @endif
         </nav>
 
-        {{-- Footer: collapse toggle + logout --}}
-        <div class="border-t p-3 shrink-0" style="border-color: var(--border-subtle);">
+        {{-- Footer: collapse toggle --}}
+        <div class="border-t p-3 shrink-0" style="border-color: var(--md-outline-variant);">
             <button onclick="toggleSidebar()"
-                class="w-full flex items-center gap-3 px-2 py-1.5 rounded-md text-[13px] font-medium transition-colors"
-                style="color: var(--text-secondary);">
-                <svg class="w-[18px] h-[18px] shrink-0 transition-transform duration-200 @if(session('sidebar_collapsed', false)) rotate-180 @endif"
-                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round">
-                    <polyline points="15 18 9 12 15 6" />
-                </svg>
+                class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-label-md font-medium transition-colors duration-200 hover:bg-[var(--md-surface-container-high)]"
+                style="color: var(--md-on-surface-variant);">
+                <span class="material-symbols-outlined text-xl shrink-0 transition-transform duration-300 @if(session('sidebar_collapsed', false)) rotate-180 @endif">chevron_left</span>
                 <span class="sidebar-text">Tutup Sidebar</span>
             </button>
         </div>
@@ -172,7 +119,7 @@
 
         .sidebar-collapsed .nav-link {
             justify-content: center;
-            padding: 0.5rem;
+            padding: 0.625rem;
         }
 
         .sidebar-collapsed .flex-1 {

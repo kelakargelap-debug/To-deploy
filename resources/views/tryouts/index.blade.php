@@ -1,75 +1,54 @@
 @extends('app')
 
 @section('content')
-<div class="p-6 max-w-6xl mx-auto">
-    <!-- Page header -->
-    <div class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Daftar Tryout</h1>
-        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Pilih tryout yang ingin kamu kerjakan</p>
+<div class="max-w-7xl mx-auto w-full">
+    <!-- Header Section -->
+    <div class="mb-8">
+        <h1 class="text-display-lg mb-2" style="color: var(--md-on-surface);">Daftar Tryout</h1>
+        <p class="text-body-md" style="color: var(--md-on-surface-variant);">Pilih tryout yang ingin kamu kerjakan</p>
     </div>
 
-    <!-- Category filter chips -->
-    <div id="category-filters" class="mb-6 flex flex-wrap gap-2">
+    <!-- Filters -->
+    <div id="category-filters" class="flex flex-wrap gap-3 mb-8">
         <button onclick="filterByCategory('all')" class="filter-chip active" data-category="all">Semua</button>
-        <!-- Category chips will be loaded via JS -->
     </div>
 
-    <!-- Tryout grid -->
-    <div id="tryout-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <!-- Tryout Grid -->
+    <div id="tryout-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Cards loaded via JS -->
     </div>
 
     <!-- Empty state -->
     <div id="tryout-empty" class="hidden">
-        <div class="text-center py-12">
-            <svg class="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-            </svg>
-            <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300">Belum ada tryout tersedia</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">Coba kembali lagi nanti</p>
-        </div>
+        <x-empty-state 
+            icon='<svg class="w-16 h-16 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1" style="color: var(--md-outline);"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>' 
+            title="Belum ada tryout tersedia" 
+            description="Coba kembali lagi nanti" 
+        />
     </div>
 
     <!-- Loading state -->
-    <div id="tryout-loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div class="card animate-pulse"><div class="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-3"></div><div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2 mb-2"></div><div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-2/3"></div></div>
-        <div class="card animate-pulse"><div class="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-3"></div><div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2 mb-2"></div><div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-2/3"></div></div>
-        <div class="card animate-pulse"><div class="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-3"></div><div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2 mb-2"></div><div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-2/3"></div></div>
+    <div id="tryout-loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="rounded-xl p-6 animate-pulse" style="background: var(--md-surface-container-lowest); border: 1px solid var(--md-outline-variant); box-shadow: 0 4px 15px rgba(0,74,198,0.04);">
+            <div class="h-5 rounded w-3/4 mb-4" style="background: var(--md-surface-container-high);"></div>
+            <div class="h-4 rounded w-1/2 mb-6" style="background: var(--md-surface-container-high);"></div>
+            <div class="space-y-3 mb-6"><div class="h-4 rounded w-full" style="background: var(--md-surface-container);"></div><div class="h-4 rounded w-full" style="background: var(--md-surface-container);"></div><div class="h-4 rounded w-full" style="background: var(--md-surface-container);"></div></div>
+            <div class="h-10 rounded-lg w-full" style="background: var(--md-surface-container-high);"></div>
+        </div>
+        <div class="rounded-xl p-6 animate-pulse" style="background: var(--md-surface-container-lowest); border: 1px solid var(--md-outline-variant); box-shadow: 0 4px 15px rgba(0,74,198,0.04);">
+            <div class="h-5 rounded w-3/4 mb-4" style="background: var(--md-surface-container-high);"></div>
+            <div class="h-4 rounded w-1/2 mb-6" style="background: var(--md-surface-container-high);"></div>
+            <div class="space-y-3 mb-6"><div class="h-4 rounded w-full" style="background: var(--md-surface-container);"></div><div class="h-4 rounded w-full" style="background: var(--md-surface-container);"></div><div class="h-4 rounded w-full" style="background: var(--md-surface-container);"></div></div>
+            <div class="h-10 rounded-lg w-full" style="background: var(--md-surface-container-high);"></div>
+        </div>
+        <div class="rounded-xl p-6 animate-pulse" style="background: var(--md-surface-container-lowest); border: 1px solid var(--md-outline-variant); box-shadow: 0 4px 15px rgba(0,74,198,0.04);">
+            <div class="h-5 rounded w-3/4 mb-4" style="background: var(--md-surface-container-high);"></div>
+            <div class="h-4 rounded w-1/2 mb-6" style="background: var(--md-surface-container-high);"></div>
+            <div class="space-y-3 mb-6"><div class="h-4 rounded w-full" style="background: var(--md-surface-container);"></div><div class="h-4 rounded w-full" style="background: var(--md-surface-container);"></div><div class="h-4 rounded w-full" style="background: var(--md-surface-container);"></div></div>
+            <div class="h-10 rounded-lg w-full" style="background: var(--md-surface-container-high);"></div>
+        </div>
     </div>
 </div>
-
-<style>
-    .filter-chip {
-        padding: 0.5rem 1rem;
-        border-radius: 9999px;
-        font-size: 0.875rem;
-        font-weight: 500;
-        transition: all 150ms;
-        background: #f3f4f6;
-        color: #4b5563;
-        border: 1px solid transparent;
-    }
-    .filter-chip:hover {
-        background: #e5e7eb;
-    }
-    .filter-chip.active {
-        background: #dbeafe;
-        color: #1d4ed8;
-        border-color: #93c5fd;
-    }
-    :root.dark .filter-chip {
-        background: #374151;
-        color: #9ca3af;
-    }
-    :root.dark .filter-chip:hover {
-        background: #4b5563;
-    }
-    :root.dark .filter-chip.active {
-        background: rgba(30, 58, 138, 0.3);
-        color: #60a5fa;
-        border-color: #1e3a8a;
-    }
-</style>
 
 <script>
 (function() {
@@ -91,7 +70,6 @@
     function loadTryouts() {
         apiFetch('/tryouts').then(function(data) {
             allTryouts = data.data || data || [];
-            // Extract categories
             var catSet = {};
             allTryouts.forEach(function(t) {
                 var catName = t.categoryName || (t.category && t.category.name) || t.category_name || '';
@@ -111,9 +89,19 @@
     function renderCategoryFilters() {
         var container = document.getElementById('category-filters');
         if (!container) return;
-        var html = '<button onclick="filterByCategory(\'all\')" class="filter-chip ' + (activeCategory === 'all' ? 'active' : '') + '" data-category="all">Semua</button>';
+
+        var html = '<button onclick="filterByCategory(\'all\')" style="' +
+            (activeCategory === 'all'
+                ? 'background: var(--md-primary-fixed); color: var(--md-primary); border: 1px solid var(--md-primary);'
+                : 'background: var(--md-surface-container); color: var(--md-on-surface-variant); border: 1px solid transparent;') +
+            '" class="px-4 py-2 rounded-full text-label-md font-medium transition-colors">Semua</button>';
+
         categories.forEach(function(cat) {
-            html += '<button onclick="filterByCategory(\'' + cat + '\')" class="filter-chip ' + (activeCategory === cat ? 'active' : '') + '" data-category="' + cat + '">' + cat + '</button>';
+            html += '<button onclick="filterByCategory(\'' + cat + '\')" style="' +
+                (activeCategory === cat
+                    ? 'background: var(--md-primary-fixed); color: var(--md-primary); border: 1px solid var(--md-primary);'
+                    : 'background: var(--md-surface-container); color: var(--md-on-surface-variant); border: 1px solid transparent;') +
+                '" class="px-4 py-2 rounded-full text-label-md font-medium transition-colors">' + cat + '</button>';
         });
         container.innerHTML = html;
     }
@@ -150,47 +138,61 @@
             var passingScore = t.passing_score || t.passingScore || '-';
             var prevAttempt = t.previous_attempt || t.lastAttempt || (t.attemptId ? { id: t.attemptId, status: t.attemptStatus, score: t.attemptScore } : null);
             var prevStatus = prevAttempt ? prevAttempt.status : null;
+            var attemptCount = t.attemptCount || 0;
+            var slug = t.slug || t.id;
 
+            // --- Action Button ---
             var actionBtn = '';
             if (isLocked) {
-                actionBtn = '<button class="btn-secondary w-full opacity-75 cursor-not-allowed flex items-center justify-center gap-2" disabled>' +
-                    '<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>' +
-                    'Premium</button>';
+                actionBtn = '<button style="background: var(--md-surface-variant); color: var(--md-on-surface-variant); opacity: 0.75;" class="w-full py-2.5 px-4 cursor-not-allowed flex items-center justify-center gap-2 text-label-md font-semibold rounded-lg" disabled>' +
+                    '<span class="material-symbols-outlined text-lg">lock</span>Premium</button>';
             } else if (prevStatus === 'IN_PROGRESS' || prevStatus === 'STARTED') {
-                actionBtn = '<a href="/tryouts/' + (t.slug || t.id) + '/exam" class="btn-primary w-full text-center">Lanjutkan</a>';
+                actionBtn = '<a href="/tryouts/' + slug + '/exam" style="background: var(--md-primary); color: var(--md-on-primary);" class="block w-full py-2.5 px-4 text-center text-label-md font-semibold rounded-lg hover:opacity-90 transition-opacity">Lanjutkan</a>';
             } else if (prevStatus === 'COMPLETED' || prevStatus === 'SUBMITTED') {
-                actionBtn = '<a href="/tryouts/' + (t.slug || t.id) + '/result/' + prevAttempt.id + '" class="btn-secondary w-full text-center">Lihat Hasil</a>';
+                actionBtn = '<div class="flex gap-2">' +
+                    '<a href="/tryouts/' + slug + '/result/' + prevAttempt.id + '" style="background: var(--md-surface-container-lowest); border: 1px solid var(--md-outline); color: var(--md-on-surface);" class="block flex-1 py-2.5 px-4 text-center text-label-md font-semibold rounded-lg hover:opacity-90 transition-opacity">Lihat Hasil</a>' +
+                    '<a href="/tryouts/' + slug + '" style="background: var(--md-primary); color: var(--md-on-primary);" class="block flex-1 py-2.5 px-4 text-center text-label-md font-semibold rounded-lg hover:opacity-90 transition-opacity">Coba Lagi</a>' +
+                    '</div>';
             } else {
-                actionBtn = '<a href="/tryouts/' + (t.slug || t.id) + '" class="btn-primary w-full text-center">Mulai</a>';
+                actionBtn = '<a href="/tryouts/' + slug + '" style="background: var(--md-primary); color: var(--md-on-primary);" class="block w-full py-2.5 px-4 text-center text-label-md font-semibold rounded-lg hover:opacity-90 transition-opacity">Mulai</a>';
             }
 
-            var lockOverlay = isLocked ? '<div class="absolute inset-0 bg-gray-900/50 dark:bg-gray-900/70 rounded-xl flex items-center justify-center z-10"><div class="text-center"><svg class="w-8 h-8 text-amber-500 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg><p class="text-white font-medium text-sm">Premium Only</p></div></div>' : '';
+            // --- Lock Overlay ---
+            var lockOverlay = isLocked ? '<div class="absolute inset-0 rounded-xl flex items-center justify-center z-10" style="background: rgba(0,0,0,0.45);"><div class="text-center"><span class="material-symbols-outlined text-3xl mb-2" style="color: #f59e0b;">lock</span><p class="text-white font-medium text-sm">Premium Only</p></div></div>' : '';
 
+            // --- Tier Badge ---
             var tierBadgeHtml = isPremium
-                ? '<span class="badge badge-premium">PREMIUM</span>'
-                : '<span class="badge badge-free">FREE</span>';
+                ? '<span class="px-2 py-1 text-xs font-bold rounded shrink-0" style="background: #fef3c7; color: #92400e;">PREMIUM</span>'
+                : '<span class="px-2 py-1 text-xs font-bold rounded shrink-0" style="background: #dcfce7; color: #166534;">FREE</span>';
 
+            // --- Previous Status Badge ---
             var prevStatusBadge = '';
             if (prevStatus === 'COMPLETED' || prevStatus === 'SUBMITTED') {
-                prevStatusBadge = '<span class="badge badge-success text-xs">Selesai</span>';
+                prevStatusBadge = '<span class="inline-flex items-center gap-1 px-2 py-1 rounded text-label-sm" style="background: #ecfdf5; color: #059669;">Selesai</span>';
+                if (attemptCount > 1) {
+                    prevStatusBadge += ' <span class="inline-flex items-center gap-1 px-2 py-1 rounded text-label-sm" style="background: var(--md-surface-container-high); color: var(--md-on-surface-variant);">' + attemptCount + 'x percobaan</span>';
+                }
             } else if (prevStatus === 'IN_PROGRESS' || prevStatus === 'STARTED') {
-                prevStatusBadge = '<span class="badge badge-danger text-xs">Sedang Berjalan</span>';
+                prevStatusBadge = '<span class="inline-flex items-center gap-1 px-2 py-1 rounded text-label-sm" style="background: #fef2f2; color: #dc2626;">Sedang Berjalan</span>';
             }
 
-            return '<div class="card relative overflow-hidden">' +
+            // --- Card ---
+            return '<div class="rounded-xl p-6 flex flex-col h-full hover:shadow-lg transition-shadow duration-300 relative overflow-hidden" style="background: var(--md-surface-container-lowest); border: 1px solid var(--md-outline-variant); box-shadow: 0 4px 15px rgba(0,74,198,0.04);">' +
                 lockOverlay +
-                '<div class="flex items-center justify-between mb-3">' +
-                    '<h3 class="font-semibold text-gray-900 dark:text-gray-100">' + (t.title || t.name) + '</h3>' +
+                '<div class="flex justify-between items-start mb-4">' +
+                    '<h2 class="text-headline-sm pr-4" style="color: var(--md-on-surface);">' + (t.title || t.name) + '</h2>' +
                     tierBadgeHtml +
                 '</div>' +
-                (catBadge ? '<p class="text-xs text-gray-500 dark:text-gray-400 mb-3"><span class="bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded">' + catBadge + '</span></p>' : '') +
-                '<div class="space-y-2 text-sm text-gray-600 dark:text-gray-400 mb-4">' +
-                    '<div class="flex justify-between"><span>Durasi</span><span class="font-medium text-gray-900 dark:text-gray-100">' + duration + ' menit</span></div>' +
-                    '<div class="flex justify-between"><span>Jumlah Soal</span><span class="font-medium text-gray-900 dark:text-gray-100">' + questionCount + '</span></div>' +
-                    '<div class="flex justify-between"><span>Passing Score</span><span class="font-medium text-gray-900 dark:text-gray-100">' + passingScore + '%</span></div>' +
+                (catBadge ? '<div class="mb-6"><span class="inline-block px-3 py-1 rounded-full text-label-sm" style="background: var(--md-surface-container-low); color: var(--md-on-surface-variant);">' + catBadge + '</span></div>' : '') +
+                '<div class="space-y-3 mb-6 flex-grow">' +
+                    '<div class="flex justify-between items-center text-body-md" style="color: var(--md-on-surface-variant);"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-lg">schedule</span><span>Durasi</span></div><span class="font-semibold" style="color: var(--md-on-surface);">' + duration + ' menit</span></div>' +
+                    '<div class="flex justify-between items-center text-body-md" style="color: var(--md-on-surface-variant);"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-lg">assignment</span><span>Jumlah Soal</span></div><span class="font-semibold" style="color: var(--md-on-surface);">' + questionCount + '</span></div>' +
+                    '<div class="flex justify-between items-center text-body-md" style="color: var(--md-on-surface-variant);"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-lg">check_circle</span><span>Passing Score</span></div><span class="font-semibold" style="color: var(--md-on-surface);">' + passingScore + '%</span></div>' +
                 '</div>' +
-                (prevStatusBadge ? '<div class="mb-3">' + prevStatusBadge + '</div>' : '') +
-                actionBtn +
+                '<div class="mt-auto pt-4">' +
+                    (prevStatusBadge ? '<div class="mb-4 flex flex-wrap gap-2">' + prevStatusBadge + '</div>' : '') +
+                    actionBtn +
+                '</div>' +
             '</div>';
         }).join('');
     }

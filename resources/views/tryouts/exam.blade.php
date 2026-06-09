@@ -1,20 +1,20 @@
 @extends('app')
 
 @section('content')
-    <div id="exam-page" class="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div id="exam-page" class="min-h-screen bg-[var(--bg-default)]">
         <!-- Top bar -->
-        <div class="sticky top-0 z-20 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3">
+        <div class="sticky top-0 z-20 bg-[var(--bg-surface)] border-b border-[var(--border-default)] px-4 py-3 shadow-sm">
             <div class="max-w-6xl mx-auto flex items-center justify-between">
-                <h2 id="exam-title" class="text-lg font-semibold text-gray-900 dark:text-gray-100 truncate">Loading...</h2>
+                <h2 id="exam-title" class="text-lg font-semibold text-[var(--text-primary)] truncate">Loading...</h2>
                 <div class="flex items-center gap-4">
                     <div id="exam-timer"
-                        class="flex items-center gap-2 px-4 py-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-                        <svg class="w-5 h-5 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24"
+                        class="flex items-center gap-2 px-4 py-2 bg-[var(--danger-subtle)] border border-[var(--danger)] rounded-lg text-[var(--danger)]">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <span id="timer-display" class="font-bold text-red-600 dark:text-red-400 text-lg">00:00:00</span>
+                        <span id="timer-display" class="font-bold text-lg font-mono">00:00:00</span>
                     </div>
                     <button id="submit-exam-btn" onclick="confirmSubmit()" class="btn-danger flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -28,78 +28,80 @@
         </div>
 
         <!-- Main content -->
-        <div class="max-w-6xl mx-auto p-4 flex gap-4">
+        <div class="max-w-6xl mx-auto p-4 flex flex-col md:flex-row gap-5">
             <!-- Question number grid (left panel) -->
             <div id="question-grid-panel"
-                class="w-64 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 sticky top-20 h-fit">
-                <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Navigasi Soal</h3>
+                class="w-full md:w-72 card md:sticky top-20 h-fit order-2 md:order-1">
+                <h3 class="text-sm font-semibold text-[var(--text-primary)] mb-4">Navigasi Soal</h3>
                 <div id="question-grid" class="grid grid-cols-5 gap-2">
                     <!-- Question buttons loaded via JS -->
                 </div>
-                <div class="mt-3 flex items-center gap-2 text-xs">
-                    <span class="w-4 h-4 rounded bg-green-500 inline-block"></span><span
-                        class="text-gray-500 dark:text-gray-400">Terjawab</span>
-                </div>
-                <div class="mt-1 flex items-center gap-2 text-xs">
-                    <span class="w-4 h-4 rounded bg-amber-500 inline-block"></span><span
-                        class="text-gray-500 dark:text-gray-400">Ragu-ragu</span>
-                </div>
-                <div class="mt-1 flex items-center gap-2 text-xs">
-                    <span class="w-4 h-4 rounded bg-gray-300 dark:bg-gray-600 inline-block"></span><span
-                        class="text-gray-500 dark:text-gray-400">Belum dijawab</span>
+                
+                <div class="mt-6 pt-4 border-t border-[var(--border-subtle)] space-y-2">
+                    <div class="flex items-center gap-2 text-xs">
+                        <span class="w-4 h-4 rounded bg-[var(--success)] inline-block"></span>
+                        <span class="text-[var(--text-secondary)]">Terjawab</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-xs">
+                        <span class="w-4 h-4 rounded bg-[var(--warning)] inline-block"></span>
+                        <span class="text-[var(--text-secondary)]">Ragu-ragu</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-xs">
+                        <span class="w-4 h-4 rounded bg-[var(--bg-subtle)] border border-[var(--border-default)] inline-block"></span>
+                        <span class="text-[var(--text-secondary)]">Belum dijawab</span>
+                    </div>
                 </div>
             </div>
 
             <!-- Question content (right panel) -->
-            <div class="flex-1">
-                <div id="question-content" class="card">
+            <div class="flex-1 order-1 md:order-2">
+                <div id="question-content" class="card min-h-[400px]">
                     <!-- Loading state -->
-                    <div id="question-loading" class="text-center py-8">
-                        <svg class="w-8 h-8 text-gray-400 animate-spin mx-auto" fill="none" viewBox="0 0 24 24">
+                    <div id="question-loading" class="text-center py-12">
+                        <svg class="w-8 h-8 text-[var(--text-muted)] animate-spin mx-auto" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
                             </circle>
                             <path class="opacity-75" fill="currentColor"
                                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                             </path>
                         </svg>
-                        <p class="text-gray-500 dark:text-gray-400 mt-2">Memuat soal...</p>
+                        <p class="text-[var(--text-secondary)] mt-3">Memuat soal...</p>
                     </div>
 
                     <!-- Actual question content (hidden until loaded) -->
-                    <div id="question-display" class="hidden">
+                    <div id="question-display" class="hidden animate-fade-in-up">
                         <!-- Question number + type badge -->
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 id="question-number" class="text-lg font-semibold text-gray-900 dark:text-gray-100">Soal 1
+                        <div class="flex items-center justify-between mb-6 pb-4 border-b border-[var(--border-subtle)]">
+                            <h3 id="question-number" class="text-xl font-bold text-[var(--text-primary)]">Soal 1
                             </h3>
-                            <span id="question-type-badge" class="badge badge-free text-xs">SINGLE</span>
+                            <span id="question-type-badge" class="badge badge-neutral">SINGLE</span>
                         </div>
 
                         <!-- Question content (HTML rendered) -->
-                        <div id="question-text" class="mb-6 text-gray-900 dark:text-gray-100 leading-relaxed"></div>
+                        <div id="question-text" class="mb-6 text-[var(--text-primary)] text-[1.067rem] leading-relaxed prose dark:prose-invert max-w-none"></div>
 
                         <!-- Question image (if any) -->
                         <div id="question-image" class="hidden mb-6">
-                            <img id="question-img" class="max-w-full rounded-lg border border-gray-200 dark:border-gray-700"
+                            <img id="question-img" class="max-w-full rounded-lg border border-[var(--border-default)]"
                                 alt="Gambar soal">
                         </div>
 
                         <!-- Options -->
-                        <div id="question-options" class="space-y-3 mb-6">
+                        <div id="question-options" class="space-y-3 mb-8">
                             <!-- Options loaded via JS -->
                         </div>
 
                         <!-- Ragu-ragu toggle -->
                         <div
-                            class="flex items-center gap-3 mb-6 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
+                            class="flex items-center gap-3 mb-8 p-4 bg-[var(--warning-subtle)] border border-[var(--warning)] rounded-lg text-[var(--warning)]">
                             <input type="checkbox" id="doubt-toggle" onchange="toggleDoubt()"
-                                class="w-5 h-5 rounded text-amber-600 focus:ring-amber-500 border-amber-300 dark:border-amber-600">
+                                class="w-5 h-5 rounded text-[var(--warning)] focus:ring-[var(--warning)] border-[var(--warning)]">
                             <label for="doubt-toggle"
-                                class="text-sm font-medium text-amber-700 dark:text-amber-300">Ragu-ragu dengan jawaban
-                                ini</label>
+                                class="text-sm font-medium cursor-pointer">Ragu-ragu dengan jawaban ini</label>
                         </div>
 
                         <!-- Prev/Next navigation -->
-                        <div class="flex items-center justify-between">
+                        <div class="flex items-center justify-between pt-4 border-t border-[var(--border-subtle)]">
                             <button id="prev-btn" onclick="prevQuestion()" class="btn-secondary flex items-center gap-2">
                                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L11.25 15l4.5-4.5" />
@@ -120,33 +122,25 @@
     </div>
 
     <!-- Submit confirmation modal -->
-    <div id="submit-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center">
-        <div class="absolute inset-0 bg-black/50" onclick="closeSubmitModal()"></div>
-        <div class="relative bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-md w-full mx-4 p-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Konfirmasi Selesai</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Apakah kamu yakin ingin menyelesaikan ujian ini?</p>
-            <div id="submit-summary" class="mb-4 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-sm">
-                <p class="text-gray-700 dark:text-gray-300">Total soal: <span id="summary-total"
-                        class="font-medium">0</span></p>
-                <p class="text-green-600 dark:text-green-400">Terjawab: <span id="summary-answered"
-                        class="font-medium">0</span></p>
-                <p class="text-amber-600 dark:text-amber-400">Ragu-ragu: <span id="summary-doubt"
-                        class="font-medium">0</span></p>
-                <p class="text-gray-500 dark:text-gray-400">Belum dijawab: <span id="summary-unanswered"
-                        class="font-medium">0</span></p>
-            </div>
-            <div class="flex gap-3 justify-end">
-                <button onclick="closeSubmitModal()" class="btn-secondary">Batal</button>
-                <button onclick="submitExam()" id="confirm-submit-btn" class="btn-danger flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    Ya, Selesai
-                </button>
-            </div>
+    <x-modal id="submit-modal" title="Konfirmasi Selesai">
+        <p class="text-sm text-[var(--text-secondary)] mb-4">Apakah kamu yakin ingin menyelesaikan ujian ini?</p>
+        <div id="submit-summary" class="mb-6 p-4 bg-[var(--bg-subtle)] rounded-lg text-sm border border-[var(--border-subtle)] space-y-2">
+            <div class="flex justify-between"><span class="text-[var(--text-secondary)]">Total soal:</span> <span id="summary-total" class="font-bold text-[var(--text-primary)]">0</span></div>
+            <div class="flex justify-between"><span class="text-[var(--text-secondary)]">Terjawab:</span> <span id="summary-answered" class="font-bold text-[var(--success)]">0</span></div>
+            <div class="flex justify-between"><span class="text-[var(--text-secondary)]">Ragu-ragu:</span> <span id="summary-doubt" class="font-bold text-[var(--warning)]">0</span></div>
+            <div class="flex justify-between"><span class="text-[var(--text-secondary)]">Belum dijawab:</span> <span id="summary-unanswered" class="font-bold text-[var(--danger)]">0</span></div>
         </div>
-    </div>
+        <div class="flex gap-3 justify-end">
+            <button onclick="closeSubmitModal()" class="btn-secondary">Batal</button>
+            <button onclick="submitExam()" id="confirm-submit-btn" class="btn-danger flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Ya, Selesai
+            </button>
+        </div>
+    </x-modal>
 
     <script>
         (function () {
@@ -268,11 +262,11 @@
                 grid.innerHTML = questions.map(function (q, i) {
                     var state = getQuestionState(q.id);
                     var colorClass = '';
-                    if (state === 'answered') colorClass = 'bg-green-500 text-white';
-                    else if (state === 'doubt') colorClass = 'bg-amber-500 text-white';
-                    else colorClass = 'bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300';
+                    if (state === 'answered') colorClass = 'bg-[var(--success)] text-white';
+                    else if (state === 'doubt') colorClass = 'bg-[var(--warning)] text-white';
+                    else colorClass = 'bg-[var(--bg-subtle)] border border-[var(--border-default)] text-[var(--text-secondary)]';
 
-                    return '<button onclick="showQuestion(' + i + ')" class="w-8 h-8 rounded text-xs font-medium flex items-center justify-center ' + colorClass + '" id="qbtn-' + i + '">' + (i + 1) + '</button>';
+                    return '<button onclick="showQuestion(' + i + ')" class="w-9 h-9 rounded-lg text-sm font-medium flex items-center justify-center transition-all ' + colorClass + '" id="qbtn-' + i + '">' + (i + 1) + '</button>';
                 }).join('');
             }
 
@@ -315,11 +309,13 @@
                     var inputName = isMultiple ? 'option-' + q.id + '-' + optId : 'option-' + q.id;
                     var optionLabel = opt.label || opt.text || String.fromCharCode(65 + i);
 
-                    return '<label class="flex items-start gap-3 p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer ' + (isChecked ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-300 dark:border-blue-600' : '') + '">' +
-                        '<input type="' + inputType + '" name="' + inputName + '" value="' + optId + '" ' + (isChecked ? 'checked' : '') + ' onchange="handleOptionChange(' + q.id + ', \'' + optId + '\', ' + isMultiple + ')" class="w-5 h-5 mt-0.5 rounded text-blue-600 focus:ring-blue-500">' +
+                    var activeClass = isChecked ? 'bg-[var(--accent-subtle)] border-[var(--accent)]' : 'border-[var(--border-default)] hover:bg-[var(--bg-subtle)]';
+
+                    return '<label class="flex items-start gap-3 p-4 border rounded-xl transition-colors cursor-pointer ' + activeClass + '">' +
+                        '<input type="' + inputType + '" name="' + inputName + '" value="' + optId + '" ' + (isChecked ? 'checked' : '') + ' onchange="handleOptionChange(' + q.id + ', \'' + optId + '\', ' + isMultiple + ')" class="w-5 h-5 mt-0.5 rounded text-[var(--accent)] focus:ring-[var(--accent)]">' +
                         '<div>' +
-                        '<span class="font-medium text-gray-700 dark:text-gray-300 mr-2">' + optionLabel + '</span>' +
-                        '<span class="text-gray-900 dark:text-gray-100">' + (opt.content || opt.text || opt.description || '') + '</span>' +
+                        '<span class="font-bold text-[var(--text-primary)] mr-2">' + optionLabel + '.</span>' +
+                        '<span class="text-[var(--text-primary)] leading-relaxed">' + (opt.content || opt.text || opt.description || '') + '</span>' +
                         '</div>' +
                         '</label>';
                 }).join('');
@@ -337,7 +333,11 @@
                 // Update grid button highlighting
                 document.querySelectorAll('#question-grid button').forEach(function (btn, bi) {
                     btn.classList.toggle('ring-2', bi === index);
-                    btn.classList.toggle('ring-blue-500', bi === index);
+                    btn.classList.toggle('ring-[var(--accent)]', bi === index);
+                    btn.classList.toggle('ring-offset-2', bi === index);
+                    if(document.documentElement.classList.contains('dark')) {
+                        btn.classList.toggle('ring-offset-[var(--bg-surface)]', bi === index);
+                    }
                 });
 
                 // Save answers to localStorage
@@ -345,6 +345,7 @@
             };
 
             window.handleOptionChange = function (qId, optId, isMultiple) {
+                optId = Number(optId) || optId; // ensure consistent type
                 if (!answers[qId]) answers[qId] = { optionIds: [], doubt: false };
 
                 if (isMultiple) {
@@ -412,11 +413,11 @@
                 document.getElementById('summary-answered').textContent = answered;
                 document.getElementById('summary-doubt').textContent = doubt;
                 document.getElementById('summary-unanswered').textContent = unanswered;
-                document.getElementById('submit-modal').classList.remove('hidden');
+                openModal('submit-modal');
             };
 
             window.closeSubmitModal = function () {
-                document.getElementById('submit-modal').classList.add('hidden');
+                closeModal('submit-modal');
             };
 
             window.submitExam = function () {

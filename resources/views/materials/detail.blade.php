@@ -1,48 +1,36 @@
 @extends('app')
 
 @section('content')
-    <div class="p-6 max-w-4xl mx-auto">
+    <div class="max-w-4xl mx-auto">
         <!-- Material title -->
-        <div class="mb-6">
-            <a href="/materials"
-                class="text-blue-600 dark:text-blue-400 hover:underline text-sm flex items-center gap-2 mb-4">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L11.25 15l4.5-4.5" />
-                </svg>
-                Kembali ke Daftar Materi
-            </a>
-            <h1 id="material-title" class="text-2xl font-bold text-gray-900 dark:text-gray-100">Loading...</h1>
-            <div class="flex items-center gap-2 mt-2">
-                <span id="material-tier-badge" class="badge badge-free">FREE</span>
-                <span id="material-category-badge" class="text-xs text-gray-500 dark:text-gray-400"></span>
-            </div>
-        </div>
+        <x-page-header title="Loading..." breadcrumb='<a href="/materials">Materi</a><span class="breadcrumb-sep">/</span><span>Detail</span>'>
+            <x-slot:actions>
+                <div class="flex items-center gap-2">
+                    <span id="material-tier-badge" class="badge badge-free">FREE</span>
+                    <span id="material-category-badge" class="badge badge-neutral hidden"></span>
+                </div>
+            </x-slot:actions>
+        </x-page-header>
 
         <!-- Premium gate message -->
-        <div id="premium-gate"
-            class="hidden mb-6 p-6 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl text-center">
-            <svg class="w-12 h-12 text-amber-500 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+        <div id="premium-gate" class="hidden mb-6 premium-gate animate-fade-in-up">
+            <svg class="premium-gate-icon mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
             </svg>
-            <h3 class="text-lg font-semibold text-amber-800 dark:text-amber-200">Materi Premium</h3>
-            <p class="text-sm text-amber-600 dark:text-amber-400 mt-1">Upgrade ke membership Premium untuk mengakses materi
-                ini</p>
+            <h3 class="premium-gate-title mt-3">Materi Premium</h3>
+            <p class="premium-gate-desc mt-1">Upgrade ke membership Premium untuk mengakses materi ini</p>
+            <a href="{{ route('profile') }}" class="btn-primary mt-4 inline-flex">Upgrade ke Premium</a>
         </div>
 
         <!-- Material content area -->
-        <div id="material-content" class="card">
-            <div id="material-body" class="text-gray-900 dark:text-gray-100 leading-relaxed">
+        <div id="material-content" class="card mb-6 animate-fade-in-up">
+            <div id="material-body" class="prose dark:prose-invert max-w-none text-[var(--text-primary)]">
                 <!-- Content loaded via JS -->
-                <div class="text-center py-8">
-                    <svg class="w-8 h-8 text-gray-400 animate-spin mx-auto" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                        </path>
-                    </svg>
-                    <p class="text-gray-500 dark:text-gray-400 mt-2">Memuat materi...</p>
+                <div class="skeleton">
+                    <div class="skeleton-heading w-1/2"></div>
+                    <div class="skeleton-text w-full mt-4"></div>
+                    <div class="skeleton-text w-full"></div>
+                    <div class="skeleton-text w-3/4"></div>
                 </div>
             </div>
         </div>
@@ -92,13 +80,17 @@
                     var tier = m.required_tier || m.tier || m.membership_tier || 'FREE';
                     var userTier = (window.SKB && window.SKB.user) ? window.SKB.user.membership_tier : 'FREE';
 
-                    document.getElementById('material-title').textContent = m.title || m.name || '';
+                    document.querySelector('.page-header-title').textContent = m.title || m.name || '';
                     var tierBadge = document.getElementById('material-tier-badge');
                     tierBadge.textContent = tier.toUpperCase();
                     tierBadge.className = 'badge ' + (tier === 'PREMIUM' ? 'badge-premium' : 'badge-free');
 
                     var catName = m.category_name || (m.category && m.category.name) || '';
-                    document.getElementById('material-category-badge').textContent = catName ? 'Kategori: ' + catName : '';
+                    if (catName) {
+                        var catBadge = document.getElementById('material-category-badge');
+                        catBadge.textContent = catName;
+                        catBadge.classList.remove('hidden');
+                    }
 
                     // Premium gate
                     if (tier === 'PREMIUM' && userTier !== 'PREMIUM') {

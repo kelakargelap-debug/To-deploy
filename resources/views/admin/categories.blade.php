@@ -1,77 +1,71 @@
 @extends('app')
 
 @section('content')
-<div class="p-6 max-w-7xl mx-auto">
-    <div class="flex items-center justify-between mb-6">
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Categories Management</h1>
-        <button onclick="openCreateModal()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition-colors">
-            + Tambah Kategori
-        </button>
-    </div>
+<div class="max-w-7xl mx-auto">
+    <x-page-header title="Categories Management" subtitle="Kelola kategori tryout">
+        <x-slot name="slot">
+            <button onclick="openCreateModal()" class="btn-primary">
+                + Tambah Kategori
+            </button>
+        </x-slot>
+    </x-page-header>
 
     {{-- Categories Table --}}
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm">
-                <thead>
-                    <tr class="bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
-                        <th class="px-5 py-3 text-left font-medium">Name</th>
-                        <th class="px-5 py-3 text-left font-medium">Slug</th>
-                        <th class="px-5 py-3 text-left font-medium">Description</th>
-                        <th class="px-5 py-3 text-left font-medium">Order</th>
-                        <th class="px-5 py-3 text-left font-medium">Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="categories-table-body" class="divide-y divide-gray-200 dark:divide-gray-600">
-                    <tr><td class="px-5 py-4 text-gray-500 dark:text-gray-400" colspan="5">Loading...</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+    <x-data-table>
+        <table class="w-full">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Slug</th>
+                    <th>Description</th>
+                    <th>Order</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="categories-table-body">
+                <tr><td colspan="5" class="text-center">Loading...</td></tr>
+            </tbody>
+        </table>
+    </x-data-table>
 </div>
 
 {{-- Create/Edit Category Modal --}}
-<div id="category-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center">
-    <div class="absolute inset-0 bg-black/50" onclick="closeCategoryModal()"></div>
-    <div class="relative bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md mx-4 border border-gray-200 dark:border-gray-700">
-        <h3 id="modal-title" class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Tambah Kategori</h3>
-        <form id="category-form" class="space-y-4">
-            <input type="hidden" id="edit-category-id" value="">
-            <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Name <span class="text-red-500">*</span></label>
-                <input type="text" id="input-cat-name" required
-                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm focus:ring-2 focus:ring-indigo-500">
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
-                <textarea id="input-cat-desc" rows="3"
-                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm focus:ring-2 focus:ring-indigo-500 resize-y"></textarea>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Order</label>
-                <input type="number" id="input-cat-order" value="0"
-                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm focus:ring-2 focus:ring-indigo-500">
-            </div>
-            <div class="flex gap-3 justify-end pt-2">
-                <button type="button" onclick="closeCategoryModal()" class="px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors">Cancel</button>
-                <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition-colors">Save</button>
-            </div>
-        </form>
-    </div>
-</div>
+<x-modal id="category-modal" title="Tambah Kategori" size="md">
+    <form id="category-form" class="space-y-4">
+        <input type="hidden" id="edit-category-id" value="">
+        <x-form-field 
+            id="input-cat-name" 
+            label="Name" 
+            type="text" 
+            required="true" 
+        />
+        <x-form-field 
+            id="input-cat-desc" 
+            label="Description" 
+            type="textarea" 
+            rows="3" 
+        />
+        <x-form-field 
+            id="input-cat-order" 
+            label="Order" 
+            type="number" 
+            value="0" 
+        />
+        <div class="flex gap-3 justify-end pt-2">
+            <button type="button" data-modal-close="category-modal" class="btn-secondary">Cancel</button>
+            <button type="submit" class="btn-primary">Save</button>
+        </div>
+    </form>
+</x-modal>
 
 {{-- Delete Confirmation Modal --}}
-<div id="delete-cat-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center">
-    <div class="absolute inset-0 bg-black/50" onclick="closeDeleteCatModal()"></div>
-    <div class="relative bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md mx-4 border border-gray-200 dark:border-gray-700">
-        <h3 class="text-lg font-semibold text-red-600 dark:text-red-400 mb-4">Delete Category</h3>
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Are you sure you want to delete: <span id="delete-cat-name" class="font-medium text-gray-900 dark:text-gray-100"></span>? This will also delete all associated tryouts and materials.</p>
-        <div class="flex gap-3 justify-end">
-            <button onclick="closeDeleteCatModal()" class="px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors">Cancel</button>
-            <button onclick="submitDeleteCat()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors">Delete</button>
-        </div>
+<x-modal id="delete-cat-modal" title="Delete Category" size="sm">
+    <p class="text-sm text-[var(--text-secondary)] mb-4">Are you sure you want to delete: <span id="delete-cat-name" class="font-bold text-[var(--text-primary)]"></span>? This will also delete all associated tryouts and materials.</p>
+    <div class="flex gap-3 justify-end">
+        <button data-modal-close="delete-cat-modal" class="btn-secondary">Cancel</button>
+        <button onclick="submitDeleteCat()" class="btn-danger">Delete</button>
     </div>
-</div>
+</x-modal>
 @endsection
 
 @push('scripts')
@@ -95,51 +89,47 @@
 
             if (categories.length) {
                 tbody.innerHTML = categories.map(c => `
-                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                        <td class="px-5 py-4 text-gray-900 dark:text-gray-100 font-medium">${escHtml(c.name)}</td>
-                        <td class="px-5 py-4 text-gray-600 dark:text-gray-400">${escHtml(c.slug)}</td>
-                        <td class="px-5 py-4 text-gray-600 dark:text-gray-400 max-w-xs truncate">${escHtml(c.description) || '-'}</td>
-                        <td class="px-5 py-4 text-gray-900 dark:text-gray-100">${c.order}</td>
-                        <td class="px-5 py-4">
+                    <tr>
+                        <td><span class="font-medium text-[var(--text-primary)]">${escHtml(c.name)}</span></td>
+                        <td>${escHtml(c.slug)}</td>
+                        <td class="max-w-xs truncate">${escHtml(c.description) || '-'}</td>
+                        <td>${c.order}</td>
+                        <td>
                             <div class="flex gap-2">
-                                <button onclick="openEditModal(${c.id})" class="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors">Edit</button>
-                                <button onclick="openDeleteCatModal(${c.id}, '${escHtml(c.name)}')" class="px-2 py-1 text-xs bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 rounded hover:bg-red-200 dark:hover:bg-red-800 transition-colors">Delete</button>
+                                <button onclick="openEditModal(${c.id})" class="btn-ghost btn-sm text-[var(--info)]">Edit</button>
+                                <button onclick="openDeleteCatModal(${c.id}, '${escHtml(c.name)}')" class="btn-ghost btn-sm text-[var(--danger)]">Delete</button>
                             </div>
                         </td>
                     </tr>
                 `).join('');
             } else {
-                tbody.innerHTML = '<tr><td class="px-5 py-4 text-gray-500" colspan="5">No categories found</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-[var(--text-muted)]">No categories found</td></tr>';
             }
         } catch (err) {
-            tbody.innerHTML = `<tr><td class="px-5 py-4 text-red-500" colspan="5">Error: ${escHtml(err.message)}</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="5" class="text-center text-[var(--danger)]">Error: ${escHtml(err.message)}</td></tr>`;
         }
     }
 
     // Create Modal
     window.openCreateModal = function() {
-        document.getElementById('modal-title').textContent = 'Tambah Kategori';
+        document.querySelector('#category-modal h3').textContent = 'Tambah Kategori';
         document.getElementById('edit-category-id').value = '';
         document.getElementById('input-cat-name').value = '';
         document.getElementById('input-cat-desc').value = '';
         document.getElementById('input-cat-order').value = '0';
-        document.getElementById('category-modal').classList.remove('hidden');
+        openModal('category-modal');
     };
 
     // Edit Modal
     window.openEditModal = function(catId) {
         const cat = categories.find(c => c.id === catId);
         if (!cat) return;
-        document.getElementById('modal-title').textContent = 'Edit Kategori';
+        document.querySelector('#category-modal h3').textContent = 'Edit Kategori';
         document.getElementById('edit-category-id').value = catId;
         document.getElementById('input-cat-name').value = cat.name;
         document.getElementById('input-cat-desc').value = cat.description || '';
         document.getElementById('input-cat-order').value = cat.order;
-        document.getElementById('category-modal').classList.remove('hidden');
-    };
-
-    window.closeCategoryModal = function() {
-        document.getElementById('category-modal').classList.add('hidden');
+        openModal('category-modal');
     };
 
     // Form Submit (create or update)
@@ -158,18 +148,18 @@
                     method: 'PATCH',
                     body: JSON.stringify(payload),
                 });
-                alert('Kategori berhasil diupdate!');
+                showToast('Kategori berhasil diupdate!', 'success');
             } else {
                 await apiFetch('/admin/categories', {
                     method: 'POST',
                     body: JSON.stringify(payload),
                 });
-                alert('Kategori berhasil dibuat!');
+                showToast('Kategori berhasil dibuat!', 'success');
             }
-            closeCategoryModal();
+            closeModal('category-modal');
             loadCategories();
         } catch (err) {
-            alert('Error: ' + err.message);
+            showToast(err.message, 'error');
         }
     });
 
@@ -177,22 +167,17 @@
     window.openDeleteCatModal = function(catId, catName) {
         deleteCatId = catId;
         document.getElementById('delete-cat-name').textContent = catName;
-        document.getElementById('delete-cat-modal').classList.remove('hidden');
-    };
-
-    window.closeDeleteCatModal = function() {
-        document.getElementById('delete-cat-modal').classList.add('hidden');
-        deleteCatId = null;
+        openModal('delete-cat-modal');
     };
 
     window.submitDeleteCat = async function() {
         try {
             await apiFetch('/admin/categories/' + deleteCatId, { method: 'DELETE' });
-            alert('Kategori berhasil dihapus!');
-            closeDeleteCatModal();
+            showToast('Kategori berhasil dihapus!', 'success');
+            closeModal('delete-cat-modal');
             loadCategories();
         } catch (err) {
-            alert('Error: ' + err.message);
+            showToast(err.message, 'error');
         }
     };
 

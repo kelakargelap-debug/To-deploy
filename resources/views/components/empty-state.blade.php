@@ -1,8 +1,19 @@
 @props(['icon' => '📋', 'title', 'description' => null])
-<div class="text-center py-12">
-    <div class="text-4xl mb-4">{{ $icon }}</div>
-    <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300">{{ $title }}</h3>
+<div class="empty-state animate-fade-in-up">
+    @if(str_contains($icon, '<svg'))
+        <div class="empty-state-icon">
+            {!! $icon !!}
+        </div>
+    @else
+        <div class="text-4xl mb-4">{{ $icon }}</div>
+    @endif
+    <h3 class="empty-state-title">{{ $title }}</h3>
     @if($description)
-        <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">{{ $description }}</p>
+        <p class="empty-state-desc">{{ $description }}</p>
+    @endif
+    @if(isset($action) && trim($action) !== '')
+        <div class="mt-4">
+            {{ $action }}
+        </div>
     @endif
 </div>

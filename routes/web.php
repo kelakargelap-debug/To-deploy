@@ -57,13 +57,34 @@ Route::middleware(['auth'])->group(function () {
         return view('attempts.index');
     })->name('my-attempts');
 
+    Route::get('/profile', function () {
+        return view('profile');
+    })->name('profile');
+
+    Route::put('/profile', function (\Illuminate\Http\Request $request) {
+        $user = auth()->user();
+        $request->validate(['name' => 'required|string|max:255']);
+        $user->update(['name' => $request->name]);
+        return redirect()->back()->with('success', 'Profil berhasil diperbarui.');
+    });
+
     Route::get('/change-password', function () {
         return view('auth.change-password');
     })->name('change-password');
 
-    Route::get('/profile', function () {
-        return view('profile');
-    })->name('profile');
+    Route::post('/change-password', function (\Illuminate\Http\Request $request) {
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|min:8|confirmed',
+            'new_password_confirmation' => 'required',
+        ]);
+        $user = auth()->user();
+        if (!\Illuminate\Support\Facades\Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors(['current_password' => 'Password saat ini salah.']);
+        }
+        $user->update(['password' => \Illuminate\Support\Facades\Hash::make($request->new_password)]);
+        return redirect()->back()->with('success', 'Password berhasil diubah.');
+    });
 
     // Admin routes
     Route::middleware(['admin'])->prefix('admin')->group(function () {

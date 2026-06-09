@@ -1,50 +1,49 @@
 @extends('app')
 
 @section('content')
-<div class="p-6 max-w-3xl mx-auto">
+<div class="max-w-3xl mx-auto">
     <div id="access-denied" class="hidden text-center py-12">
-        <p class="text-red-500 dark:text-red-400 text-lg font-medium">Access Denied</p>
-        <p class="text-gray-600 dark:text-gray-400 mt-2">Only Super Admin can create new users.</p>
-        <button onclick="navigateTo('/admin/users')" class="mt-4 px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors">Back to Users</button>
+        <p class="text-[var(--danger)] text-lg font-medium">Access Denied</p>
+        <p class="text-[var(--text-secondary)] mt-2">Only Super Admin can create new users.</p>
+        <button onclick="navigateTo('/admin/users')" class="btn-secondary mt-4">Back to Users</button>
     </div>
 
     <div id="create-form-wrapper">
-        <div class="flex items-center gap-4 mb-6">
-            <button onclick="navigateTo('/admin/users')" class="px-3 py-2 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors">
+        <div class="mb-6">
+            <button onclick="navigateTo('/admin/users')" class="btn-ghost mb-4">
                 &larr; Back to Users
             </button>
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Create User</h1>
+            <h1 class="text-2xl font-bold text-[var(--text-primary)]">Create User</h1>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-6">
+        <div class="bg-[var(--bg-surface)] rounded-lg shadow-sm border border-[var(--border-color)] p-6">
             <form id="create-user-form" class="space-y-5">
-                {{-- Name --}}
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Name <span class="text-red-500">*</span></label>
-                    <input type="text" id="input-name" required
-                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm focus:ring-2 focus:ring-indigo-500">
-                </div>
+                <x-form-field 
+                    id="input-name" 
+                    label="Name" 
+                    type="text" 
+                    required="true" 
+                />
 
-                {{-- Email --}}
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email <span class="text-red-500">*</span></label>
-                    <input type="email" id="input-email" required
-                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm focus:ring-2 focus:ring-indigo-500">
-                </div>
+                <x-form-field 
+                    id="input-email" 
+                    label="Email" 
+                    type="email" 
+                    required="true" 
+                />
 
-                {{-- Password --}}
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password <span class="text-red-500">*</span></label>
-                    <input type="password" id="input-password" required minlength="5"
-                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm focus:ring-2 focus:ring-indigo-500">
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Minimum 5 characters</p>
-                </div>
+                <x-form-field 
+                    id="input-password" 
+                    label="Password" 
+                    type="password" 
+                    required="true" 
+                    helpText="Minimum 5 characters"
+                />
 
                 {{-- Role --}}
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Role</label>
-                    <select id="input-role"
-                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm focus:ring-2 focus:ring-indigo-500">
+                    <label class="block text-sm font-medium text-[var(--text-secondary)] mb-1">Role</label>
+                    <select id="input-role" class="input-field">
                         <option value="USER">USER</option>
                         <option value="ADMIN">ADMIN</option>
                         <option value="SUPERADMIN">SUPERADMIN</option>
@@ -53,9 +52,8 @@
 
                 {{-- Tier --}}
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Membership Tier</label>
-                    <select id="input-tier"
-                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm focus:ring-2 focus:ring-indigo-500">
+                    <label class="block text-sm font-medium text-[var(--text-secondary)] mb-1">Membership Tier</label>
+                    <select id="input-tier" class="input-field">
                         <option value="FREE">FREE</option>
                         <option value="PREMIUM">PREMIUM</option>
                     </select>
@@ -63,9 +61,8 @@
 
                 {{-- Status --}}
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Membership Status</label>
-                    <select id="input-status"
-                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm focus:ring-2 focus:ring-indigo-500">
+                    <label class="block text-sm font-medium text-[var(--text-secondary)] mb-1">Membership Status</label>
+                    <select id="input-status" class="input-field">
                         <option value="ACTIVE">ACTIVE</option>
                         <option value="EXPIRED">EXPIRED</option>
                         <option value="SUSPENDED">SUSPENDED</option>
@@ -73,27 +70,27 @@
                 </div>
 
                 {{-- Expiry --}}
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Membership Expiry</label>
-                    <input type="date" id="input-expiry"
-                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm focus:ring-2 focus:ring-indigo-500">
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Leave empty for no expiry</p>
-                </div>
+                <x-form-field 
+                    id="input-expiry" 
+                    label="Membership Expiry" 
+                    type="date" 
+                    helpText="Leave empty for no expiry"
+                />
 
                 {{-- Active Toggle --}}
                 <div class="flex items-center gap-3">
-                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Active</label>
+                    <label class="text-sm font-medium text-[var(--text-secondary)]">Active</label>
                     <button id="toggle-active" type="button" onclick="toggleActiveState()"
-                        class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none bg-indigo-600">
+                        class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none" style="background-color: var(--accent);">
                         <span id="toggle-active-dot" class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform translate-x-5"></span>
                     </button>
-                    <span id="active-label" class="text-sm text-gray-600 dark:text-gray-400">Yes</span>
+                    <span id="active-label" class="text-sm text-[var(--text-secondary)]">Yes</span>
                 </div>
 
                 {{-- Buttons --}}
-                <div class="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
-                    <button type="submit" class="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition-colors">Create User</button>
-                    <button type="button" onclick="navigateTo('/admin/users')" class="px-6 py-2 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors">Cancel</button>
+                <div class="flex gap-3 pt-4 border-t border-[var(--border-color)]">
+                    <button type="submit" class="btn-primary">Create User</button>
+                    <button type="button" onclick="navigateTo('/admin/users')" class="btn-secondary">Cancel</button>
                 </div>
             </form>
         </div>
@@ -126,14 +123,12 @@
         const label = document.getElementById('active-label');
 
         if (isActive) {
-            toggle.classList.remove('bg-gray-300', 'dark:bg-gray-600');
-            toggle.classList.add('bg-indigo-600');
+            toggle.style.backgroundColor = 'var(--accent)';
             dot.classList.remove('translate-x-0');
             dot.classList.add('translate-x-5');
             label.textContent = 'Yes';
         } else {
-            toggle.classList.remove('bg-indigo-600');
-            toggle.classList.add('bg-gray-300', 'dark:bg-gray-600');
+            toggle.style.backgroundColor = 'var(--text-muted)';
             dot.classList.remove('translate-x-5');
             dot.classList.add('translate-x-0');
             label.textContent = 'No';
@@ -162,10 +157,10 @@
                 method: 'POST',
                 body: JSON.stringify(payload),
             });
-            alert('User berhasil dibuat!');
+            showToast('User berhasil dibuat!', 'success');
             navigateTo('/admin/users');
         } catch (err) {
-            alert('Error: ' + err.message);
+            showToast(err.message, 'error');
         }
     });
 })();
