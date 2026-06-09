@@ -132,7 +132,7 @@
 
         {{-- MAIN AREA — offset by sidebar width --}}
         <div id="main-area"
-            class="flex flex-col min-h-screen transition-all duration-200 @if(session('sidebar_collapsed', false)) main-collapsed @else main-expanded @endif">
+            class="flex flex-col min-h-screen transition-all duration-200 @auth @if(session('sidebar_collapsed', false)) main-collapsed @else main-expanded @endif @endauth">
 
             {{-- TOP HEADER BAR --}}
             @auth

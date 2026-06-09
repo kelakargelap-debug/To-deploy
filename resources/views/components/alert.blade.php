@@ -1,4 +1,4 @@
-@props(['type' => 'info', 'dismissable' => false])
+@props(['type' => 'info', 'dismissable' => false, 'message' => null])
 
 @php
     $iconMap = [
@@ -12,7 +12,11 @@
 <div {{ $attributes->merge(['class' => 'alert alert-' . $type]) }}>
     {!! $iconMap[$type] ?? $iconMap['info'] !!}
     <div class="flex-1 min-w-0">
-        {{ $slot }}
+        @if($message)
+            {{ $message }}
+        @else
+            {{ $slot }}
+        @endif
     </div>
     @if($dismissable)
         <button type="button" class="flex-shrink-0 ml-3 opacity-60 hover:opacity-100 transition-opacity" onclick="this.parentElement.style.display='none'">
