@@ -4,7 +4,7 @@
     <div id="exam-page" class="min-h-screen bg-[var(--bg-default)]">
         <!-- Top bar -->
         <div class="sticky top-0 z-20 bg-[var(--bg-surface)] border-b border-[var(--border-default)] px-4 py-3 shadow-sm">
-            <div class="max-w-6xl mx-auto flex items-center justify-between">
+            <div class="max-w-7xl mx-auto flex items-center justify-between">
                 <h2 id="exam-title" class="text-lg font-semibold text-[var(--text-primary)] truncate">Loading...</h2>
                 <div class="flex items-center gap-4">
                     <div id="exam-timer"
@@ -28,33 +28,9 @@
         </div>
 
         <!-- Main content -->
-        <div class="max-w-6xl mx-auto p-4 flex flex-col md:flex-row gap-5">
-            <!-- Question number grid (left panel) -->
-            <div id="question-grid-panel"
-                class="w-full md:w-72 card md:sticky top-20 h-fit order-2 md:order-1">
-                <h3 class="text-sm font-semibold text-[var(--text-primary)] mb-4">Navigasi Soal</h3>
-                <div id="question-grid" class="grid grid-cols-5 gap-2">
-                    <!-- Question buttons loaded via JS -->
-                </div>
-                
-                <div class="mt-6 pt-4 border-t border-[var(--border-subtle)] space-y-2">
-                    <div class="flex items-center gap-2 text-xs">
-                        <span class="w-4 h-4 rounded bg-[var(--success)] inline-block"></span>
-                        <span class="text-[var(--text-secondary)]">Terjawab</span>
-                    </div>
-                    <div class="flex items-center gap-2 text-xs">
-                        <span class="w-4 h-4 rounded bg-[var(--warning)] inline-block"></span>
-                        <span class="text-[var(--text-secondary)]">Ragu-ragu</span>
-                    </div>
-                    <div class="flex items-center gap-2 text-xs">
-                        <span class="w-4 h-4 rounded bg-[var(--bg-subtle)] border border-[var(--border-default)] inline-block"></span>
-                        <span class="text-[var(--text-secondary)]">Belum dijawab</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Question content (right panel) -->
-            <div class="flex-1 order-1 md:order-2">
+        <div class="max-w-7xl mx-auto p-4 flex flex-col md:flex-row gap-6">
+            <!-- Question content (left panel) -->
+            <div class="flex-1 min-w-0 order-1">
                 <div id="question-content" class="card min-h-[400px]">
                     <!-- Loading state -->
                     <div id="question-loading" class="text-center py-12">
@@ -115,6 +91,30 @@
                                 </svg>
                             </button>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question number grid (right panel) -->
+            <div id="question-grid-panel"
+                class="w-full md:w-80 flex-none order-2 card md:sticky top-20 h-fit">
+                <h3 class="text-sm font-semibold text-[var(--text-primary)] mb-4">Navigasi Soal</h3>
+                <div id="question-grid" class="grid grid-cols-5 gap-2">
+                    <!-- Question buttons loaded via JS -->
+                </div>
+                
+                <div class="mt-6 pt-4 border-t border-[var(--border-subtle)] space-y-2">
+                    <div class="flex items-center gap-2 text-xs">
+                        <span class="w-4 h-4 rounded bg-[var(--success)] inline-block"></span>
+                        <span class="text-[var(--text-secondary)]">Terjawab</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-xs">
+                        <span class="w-4 h-4 rounded bg-[var(--warning)] inline-block"></span>
+                        <span class="text-[var(--text-secondary)]">Ragu-ragu</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-xs">
+                        <span class="w-4 h-4 rounded bg-[var(--bg-subtle)] border border-[var(--border-default)] inline-block"></span>
+                        <span class="text-[var(--text-secondary)]">Belum dijawab</span>
                     </div>
                 </div>
             </div>
