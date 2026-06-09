@@ -77,6 +77,10 @@
                     <input type="email" value="{{ Auth::user()->email }}" class="input-field" disabled style="opacity: 0.7; cursor: not-allowed;">
                     <p class="text-label-sm" style="color: var(--md-outline);">Email tidak dapat diubah. Hubungi support.</p>
                 </div>
+                <div class="space-y-2">
+                    <label class="form-label">Nomor HP</label>
+                    <input type="text" name="phone" value="{{ Auth::user()->phone }}" class="input-field" placeholder="08xxxxxxxx">
+                </div>
                 <div class="pt-4 flex justify-end" style="border-top: 1px solid var(--md-outline-variant);">
                     <button type="submit" class="btn-primary">
                         <span class="material-symbols-outlined text-lg">save</span>
@@ -124,6 +128,15 @@
                     </button>
                 </div>
             </form>
+            
+            <div class="mt-6 pt-6" style="border-top: 1px solid var(--md-outline-variant);">
+                <h5 class="text-title-md mb-2" style="color: var(--md-on-surface);">Manajemen Perangkat</h5>
+                <p class="text-body-sm mb-4" style="color: var(--md-on-surface-variant);">Lihat riwayat login dan atur perangkat yang dipercaya.</p>
+                <a href="{{ route('security.index') }}" class="btn-primary w-full flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-lg">devices</span>
+                    Buka Keamanan Akun
+                </a>
+            </div>
         </div>
     </div>
 </div>

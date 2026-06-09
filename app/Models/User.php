@@ -12,7 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-#[Fillable(['name', 'email', 'password', 'role', 'membership_tier', 'membership_status', 'membership_expiry', 'is_active'])]
+#[Fillable(['name', 'email', 'phone', 'password', 'role', 'membership_tier', 'membership_status', 'membership_expiry', 'is_active', 'status', 'phone_verified_at', 'last_login_at'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -32,9 +32,43 @@ class User extends Authenticatable
             'membership_expiry' => 'datetime',
             'is_active' => 'boolean',
             'role' => 'string',
-            'membership_tier' => 'string',
             'membership_status' => 'string',
+            'phone_verified_at' => 'datetime',
+            'last_login_at' => 'datetime',
+            'status' => 'string',
         ];
+    }
+
+    /**
+     * A user has many verification otps.
+     */
+    public function verificationOtps(): HasMany
+    {
+        return $this->hasMany(VerificationOtp::class);
+    }
+
+    /**
+     * A user has many login histories.
+     */
+    public function loginHistories(): HasMany
+    {
+        return $this->hasMany(LoginHistory::class);
+    }
+
+    /**
+     * A user has many trusted devices.
+     */
+    public function trustedDevices(): HasMany
+    {
+        return $this->hasMany(TrustedDevice::class);
+    }
+
+    /**
+     * A user has many auth sessions.
+     */
+    public function authSessions(): HasMany
+    {
+        return $this->hasMany(AuthSession::class);
     }
 
     /**

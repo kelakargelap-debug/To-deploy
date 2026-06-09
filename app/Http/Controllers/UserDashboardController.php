@@ -236,6 +236,16 @@ class UserDashboardController extends Controller
             ->first();
 
         if ($activeAttempt) {
+            // Exam protection: Device locking/takeover
+            $currentDeviceId = $request->cookie('device_id');
+            if ($activeAttempt->trusted_device_id !== $currentDeviceId) {
+                // User chose takeover mode: update trusted device to new one
+                $activeAttempt->update([
+                    'trusted_device_id' => $currentDeviceId,
+                    'last_heartbeat_at' => now()
+                ]);
+            }
+
             // Resume running session
             $savedAnswers = [];
             $doubtAnswers = [];
@@ -279,9 +289,11 @@ class UserDashboardController extends Controller
         $newAttempt = Attempt::create([
             'user_id' => $user->id,
             'tryout_id' => $tryout->id,
+            'trusted_device_id' => $request->cookie('device_id'),
             'status' => 'IN_PROGRESS',
             'started_at' => now(),
             'expires_at' => $expiresAt,
+            'last_heartbeat_at' => now(),
             'total_answered' => 0,
             'snapshot' => [
                 'questionOrder' => $orderedQuestionIds,
@@ -323,6 +335,11 @@ class UserDashboardController extends Controller
 
         if (!$attempt) {
             return response()->json(['error' => 'Anda tidak memiliki sesi tryout yang sedang berlangsung.'], 403);
+        }
+
+        // Exam Protection lock check
+        if ($attempt->trusted_device_id && $attempt->trusted_device_id !== request()->cookie('device_id')) {
+            return response()->json(['error' => 'SESSION_TAKEN_OVER', 'message' => 'Sesi ujian Anda telah diambil alih oleh perangkat lain.'], 403);
         }
 
         $questions = Question::where('tryout_id', $tryout->id)->get();
@@ -393,6 +410,10 @@ class UserDashboardController extends Controller
             return response()->json(['error' => 'Sesi ujian sudah ditutup atau tidak ditemukan.'], 403);
         }
 
+        if ($attempt->trusted_device_id && $attempt->trusted_device_id !== $request->cookie('device_id')) {
+            return response()->json(['error' => 'SESSION_TAKEN_OVER', 'message' => 'Sesi ujian Anda telah diambil alih oleh perangkat lain.'], 403);
+        }
+
         if ($attempt->expires_at < now()) {
             return response()->json(['error' => 'Waktu ujian Anda telah habis.'], 403);
         }
@@ -444,6 +465,10 @@ class UserDashboardController extends Controller
             return response()->json(['error' => 'Sesi tidak valid.'], 403);
         }
 
+        if ($attempt->trusted_device_id && $attempt->trusted_device_id !== $request->cookie('device_id')) {
+            return response()->json(['error' => 'SESSION_TAKEN_OVER', 'message' => 'Sesi ujian Anda telah diambil alih oleh perangkat lain.'], 403);
+        }
+
         $snapshot = $attempt->snapshot ?? [];
         $snapshot['currentIndex'] = $validated['currentIndex'];
         $attempt->update(['snapshot' => $snapshot]);
@@ -468,6 +493,10 @@ class UserDashboardController extends Controller
 
         if (!$attempt || $attempt->status !== 'IN_PROGRESS') {
             return response()->json(['error' => 'Sesi tryout tidak ditemukan atau sudah dikumpulkan.'], 400);
+        }
+
+        if ($attempt->trusted_device_id && $attempt->trusted_device_id !== $request->cookie('device_id')) {
+            return response()->json(['error' => 'SESSION_TAKEN_OVER', 'message' => 'Sesi ujian Anda telah diambil alih oleh perangkat lain.'], 403);
         }
 
         $tryout = $attempt->tryout;

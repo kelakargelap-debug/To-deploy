@@ -9,6 +9,8 @@ use App\Http\Controllers\AdminController;
 // Public auth routes
 Route::post('/auth/login', [AuthController::class, 'login']);
 Route::post('/auth/register', [AuthController::class, 'register']);
+Route::post('/auth/verify-email-otp', [AuthController::class, 'verifyEmailOtp']);
+Route::post('/auth/resend-email-otp', [AuthController::class, 'resendEmailOtp']);
 
 // Authenticated routes
 Route::middleware('auth:sanctum')->group(function () {
@@ -24,6 +26,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/tryouts', [UserDashboardController::class, 'tryouts']);
     Route::get('/tryouts/{slug}', [UserDashboardController::class, 'tryoutDetail']);
     Route::post('/tryouts/{slug}/start', [UserDashboardController::class, 'startAttempt'])->name('api.tryout.start');
+    Route::post('/tryouts/{slug}/heartbeat', [UserDashboardController::class, 'heartbeat']);
     Route::get('/tryouts/{slug}/questions', [UserDashboardController::class, 'getQuestions']);
     Route::post('/tryouts/{slug}/save-answer', [UserDashboardController::class, 'saveAnswer'])->name('api.tryout.save-answer');
     Route::patch('/tryouts/{slug}/position', [UserDashboardController::class, 'savePosition']);

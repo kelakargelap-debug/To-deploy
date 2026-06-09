@@ -18,6 +18,13 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
             'premium' => \App\Http\Middleware\PremiumCheckMiddleware::class,
+            'device' => \App\Http\Middleware\DeviceMiddleware::class,
+            'auth.session.db' => \App\Http\Middleware\AuthSessionMiddleware::class,
+        ]);
+        
+        $middleware->appendToGroup('web', [
+            \App\Http\Middleware\DeviceMiddleware::class,
+            \App\Http\Middleware\AuthSessionMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

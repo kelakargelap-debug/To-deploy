@@ -208,12 +208,13 @@
                     document.getElementById('question-display').classList.remove('hidden');
 
                     startTimer();
+                    startHeartbeat();
                     renderQuestionGrid();
                     showQuestion(snapshot.currentIndex || 0);
                 }).catch(function (err) {
                     console.error('Failed to start exam:', err);
-                    alert('Gagal memuat ujian: ' + err.message);
-                    navigateTo('{{ route("tryouts") }}');
+                    showToast('Gagal memuat ujian: ' + err.message, 'error');
+                    setTimeout(function() { navigateTo('{{ route("tryouts") }}'); }, 2000);
                 });
             }
 
@@ -245,8 +246,22 @@
                 }
             }
 
+            // Heartbeat to keep session alive and check takeover
+            var heartbeatInterval = null;
+            function startHeartbeat() {
+                heartbeatInterval = setInterval(function() {
+                    apiFetch('/tryouts/' + tryoutSlug + '/heartbeat', { method: 'POST' })
+                        .catch(function(err) {
+                            if (err.message === 'SESSION_TAKEN_OVER') {
+                                clearInterval(heartbeatInterval);
+                                clearInterval(timerInterval);
+                            }
+                        });
+                }, 60000); // 1 minute
+            }
+
             function autoSubmit() {
-                alert('Waktu ujian telah habis! Jawaban akan disimpan secara otomatis.');
+                showToast('Waktu ujian telah habis! Jawaban akan disimpan secara otomatis.', 'warning');
                 submitExam();
             }
 
@@ -432,7 +447,7 @@
                     navigateTo('/tryouts/' + tryoutSlug + '/result/' + (data.attempt_id || attemptId));
                 }).catch(function (err) {
                     console.error('Submit failed:', err);
-                    alert('Gagal menyimpan jawaban: ' + err.message);
+                    showToast('Gagal menyimpan jawaban: ' + err.message, 'error');
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Ya, Selesai';
 

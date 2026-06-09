@@ -87,6 +87,16 @@
                             required="true" 
                             autocomplete="email"
                         />
+
+                        <x-form-field 
+                            id="reg-phone" 
+                            name="phone"
+                            label="Nomor HP" 
+                            type="text" 
+                            placeholder="08xxxxxxxxxx (Opsional)" 
+                            required="false" 
+                            autocomplete="tel"
+                        />
                         
                         <x-form-field 
                             id="reg-password" 

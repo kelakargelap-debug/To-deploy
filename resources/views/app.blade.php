@@ -50,6 +50,13 @@
             }
             if (!response.ok) {
                 var err = await response.json().catch(function () { return { message: 'Request failed' }; });
+                if (response.status === 403 && err.error === 'SESSION_TAKEN_OVER') {
+                    showToast(err.message || 'Sesi ujian Anda telah diambil alih oleh perangkat lain.', 'error');
+                    setTimeout(() => {
+                        window.location.href = '{{ route("dashboard") }}';
+                    }, 2000);
+                    throw new Error('SESSION_TAKEN_OVER');
+                }
                 throw new Error(err.message || 'Request failed');
             }
             return response.json();

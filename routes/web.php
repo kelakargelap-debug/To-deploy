@@ -9,6 +9,9 @@ Route::post('/login', [WebAuthController::class, 'login']);
 Route::post('/register', [WebAuthController::class, 'register'])->name('register');
 Route::post('/logout', [WebAuthController::class, 'logout'])->name('logout');
 
+Route::get('/verify-otp', [WebAuthController::class, 'showVerifyOtp'])->name('verify-otp');
+Route::post('/verify-otp', [WebAuthController::class, 'verifyOtp']);
+
 // Session toggle routes (session-based auth)
 Route::middleware(['auth'])->group(function () {
     Route::post('/toggle-dark-mode', function () {
@@ -61,10 +64,18 @@ Route::middleware(['auth'])->group(function () {
         return view('profile');
     })->name('profile');
 
+    Route::get('/security', [\App\Http\Controllers\SecurityController::class, 'index'])->name('security.index');
+    Route::delete('/security/devices/{id}', [\App\Http\Controllers\SecurityController::class, 'revokeDevice'])->name('security.revoke-device');
+    Route::post('/security/logout-all', [\App\Http\Controllers\SecurityController::class, 'requestLogoutAll'])->name('security.logout-all');
+    Route::post('/security/logout-all/confirm', [\App\Http\Controllers\SecurityController::class, 'confirmLogoutAll'])->name('security.logout-all.confirm');
+
     Route::put('/profile', function (\Illuminate\Http\Request $request) {
         $user = auth()->user();
-        $request->validate(['name' => 'required|string|max:255']);
-        $user->update(['name' => $request->name]);
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'phone' => 'nullable|string|max:20'
+        ]);
+        $user->update(['name' => $request->name, 'phone' => $request->phone]);
         return redirect()->back()->with('success', 'Profil berhasil diperbarui.');
     });
 
