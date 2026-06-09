@@ -1,6 +1,6 @@
 @auth
     <aside id="sidebar"
-        class="fixed left-0 top-0 h-full z-30 transition-all duration-300 ease-in-out flex flex-col overflow-hidden @if(session('sidebar_collapsed', false)) sidebar-collapsed @else sidebar-expanded @endif"
+        class="fixed left-0 top-0 h-full z-50 transition-all duration-300 ease-in-out flex flex-col overflow-hidden @if(session('sidebar_collapsed', true)) sidebar-collapsed @else sidebar-expanded @endif"
         style="background: var(--md-surface-container-low); border-right: 1px solid var(--md-outline-variant);">
 
         {{-- Logo area --}}

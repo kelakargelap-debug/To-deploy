@@ -2,11 +2,9 @@
 @section('content')
     <div class="max-w-7xl mx-auto">
         <x-page-header title="Tryout Management" subtitle="Kelola daftar tryout yang tersedia">
-            <x-slot:action>
-                <button onclick="navigateTo('/admin/tryouts/create')" class="btn-primary">
-                    + Tambah Tryout
-                </button>
-            </x-slot:action>
+            <button onclick="navigateTo('/admin/tryouts/create')" class="btn-primary">
+                + Tambah Tryout
+            </button>
         </x-page-header>
 
         {{-- Tryouts Table --}}

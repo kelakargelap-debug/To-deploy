@@ -28,7 +28,7 @@
                 isSuperAdmin: false,
             @endguest
             darkMode: {{ session('dark_mode', false) ? 'true' : 'false' }},
-            sidebarCollapsed: {{ session('sidebar_collapsed', false) ? 'true' : 'false' }},
+            sidebarCollapsed: {{ session('sidebar_collapsed', true) ? 'true' : 'false' }},
         };
 
         // ---- apiFetch with CSRF session auth ----
@@ -132,7 +132,7 @@
 
         {{-- MAIN AREA — offset by sidebar width --}}
         <div id="main-area"
-            class="flex flex-col min-h-screen transition-all duration-200 @auth @if(session('sidebar_collapsed', false)) main-collapsed @else main-expanded @endif @endauth">
+            class="flex flex-col min-h-screen transition-all duration-200 @auth @if(session('sidebar_collapsed', true)) main-collapsed @else main-expanded @endif @endauth">
 
             {{-- TOP HEADER BAR --}}
             @auth
@@ -144,7 +144,7 @@
                             onclick="toggleMobileSidebar()">
                             <span class="material-symbols-outlined">menu</span>
                         </button>
-                        <h1 class="text-headline-sm font-bold" style="color: var(--md-primary);">Tryout</h1>
+
                     </div>
 
                     <div class="flex items-center gap-3">
