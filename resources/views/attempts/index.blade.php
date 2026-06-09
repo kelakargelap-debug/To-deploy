@@ -1,7 +1,7 @@
 @extends('app')
 
 @section('content')
-<div class="max-w-6xl mx-auto">
+<div class="max-w-5xl mx-auto">
     <x-page-header title="Nilai Saya" subtitle="Riwayat percobaan tryout kamu" />
 
     <!-- Loading State -->

@@ -1,7 +1,7 @@
 @extends('app')
 
 @section('content')
-<div class="max-w-7xl mx-auto pb-12">
+<div class="max-w-5xl mx-auto pb-12">
     <!-- Header Section -->
     <div class="flex items-center justify-between mb-8">
         <div class="flex items-center gap-4">
