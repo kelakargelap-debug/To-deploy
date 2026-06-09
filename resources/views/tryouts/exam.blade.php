@@ -381,6 +381,9 @@
             window.nextQuestion = function () {
                 if (currentQuestionIndex < questions.length - 1) {
                     showQuestion(currentQuestionIndex + 1);
+                } else {
+                    // Jika di soal terakhir, tombol "Selesai" memanggil konfirmasi submit
+                    confirmSubmit();
                 }
             };
 
