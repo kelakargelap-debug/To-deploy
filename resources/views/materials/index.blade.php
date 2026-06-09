@@ -5,7 +5,7 @@
     <!-- Header Section -->
     <div class="mb-10 text-center md:text-left">
         <h1 class="text-display-lg font-bold text-[var(--text-primary)] mb-3">Materi Belajar</h1>
-        <p class="text-body-lg text-[var(--text-secondary)] max-w-2xl">Tingkatkan pemahaman Anda dengan materi komprehensif yang dirancang khusus untuk persiapan SKB.</p>
+        <p class="text-body-lg text-[var(--text-secondary)] max-w-2xl">Tingkatkan pemahaman Anda dengan materi komprehensif yang dirancang khusus.</p>
     </div>
 
     <!-- Category filter chips -->

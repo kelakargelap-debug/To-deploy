@@ -55,11 +55,6 @@
                 <span class="sidebar-text text-label-md">Nilai Saya</span>
             </a>
 
-            <a href="{{ route('change-password') }}"
-                class="nav-link {{ request()->routeIs('change-password') ? 'active' : '' }}">
-                <span class="material-symbols-outlined text-xl shrink-0" @if(request()->routeIs('change-password')) data-weight="fill" @endif>lock</span>
-                <span class="sidebar-text text-label-md">Ubah Password</span>
-            </a>
 
             <a href="{{ route('profile') }}" class="nav-link {{ request()->routeIs('profile') ? 'active' : '' }}">
                 <span class="material-symbols-outlined text-xl shrink-0" @if(request()->routeIs('profile')) data-weight="fill" @endif>person</span>
@@ -113,18 +108,23 @@
     </aside>
 
     <style>
-        .sidebar-collapsed .sidebar-text {
+        .sidebar-collapsed:not(:hover) .sidebar-text {
             display: none !important;
         }
 
-        .sidebar-collapsed .nav-link {
+        .sidebar-collapsed:not(:hover) .nav-link {
             justify-content: center;
             padding: 0.625rem;
         }
 
-        .sidebar-collapsed .flex-1 {
+        .sidebar-collapsed:not(:hover) .flex-1 {
             padding-left: 0.25rem;
             padding-right: 0.25rem;
+        }
+        
+        .sidebar-collapsed:hover {
+            width: var(--sidebar-width) !important;
+            box-shadow: var(--shadow-lg);
         }
     </style>
 @endauth

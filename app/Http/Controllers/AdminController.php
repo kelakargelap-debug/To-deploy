@@ -423,6 +423,12 @@ class AdminController extends Controller
     }
 
     // MATERIAL MANAGEMENT
+    public function materialDetail($id): JsonResponse
+    {
+        $material = Material::findOrFail($id);
+        return response()->json($material);
+    }
+
     public function createMaterial(Request $request): JsonResponse
     {
         $validated = $request->validate([

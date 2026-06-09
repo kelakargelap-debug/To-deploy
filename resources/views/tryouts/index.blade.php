@@ -8,9 +8,19 @@
         <p class="text-body-md" style="color: var(--md-on-surface-variant);">Pilih tryout yang ingin kamu kerjakan</p>
     </div>
 
-    <!-- Filters -->
-    <div id="category-filters" class="flex flex-wrap gap-3 mb-8">
-        <button onclick="filterByCategory('all')" class="filter-chip active" data-category="all">Semua</button>
+    <!-- Filters & View Toggle -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+        <div id="category-filters" class="flex flex-wrap gap-3">
+            <button onclick="filterByCategory('all')" class="filter-chip active" data-category="all">Semua</button>
+        </div>
+        <div class="flex items-center bg-[var(--md-surface-container-low)] p-1 rounded-lg border border-[var(--md-outline-variant)]">
+            <button id="btn-view-grid" onclick="setViewMode('grid')" class="p-2 rounded bg-[var(--md-surface-container-lowest)] text-[var(--md-primary)] shadow-sm flex items-center justify-center" title="Grid View">
+                <span class="material-symbols-outlined text-sm">grid_view</span>
+            </button>
+            <button id="btn-view-list" onclick="setViewMode('list')" class="p-2 rounded text-[var(--md-on-surface-variant)] hover:bg-[var(--md-surface-container-high)] flex items-center justify-center" title="List View">
+                <span class="material-symbols-outlined text-sm">list</span>
+            </button>
+        </div>
     </div>
 
     <!-- Tryout Grid -->
@@ -56,6 +66,25 @@
     var categories = [];
     var activeCategory = 'all';
     var userTier = 'FREE';
+    var viewMode = 'grid'; // 'grid' or 'list'
+
+    window.setViewMode = function(mode) {
+        viewMode = mode;
+        
+        // Update button styles
+        var btnGrid = document.getElementById('btn-view-grid');
+        var btnList = document.getElementById('btn-view-list');
+        
+        if (mode === 'grid') {
+            btnGrid.className = 'p-2 rounded bg-[var(--md-surface-container-lowest)] text-[var(--md-primary)] shadow-sm flex items-center justify-center';
+            btnList.className = 'p-2 rounded text-[var(--md-on-surface-variant)] hover:bg-[var(--md-surface-container-high)] flex items-center justify-center';
+        } else {
+            btnList.className = 'p-2 rounded bg-[var(--md-surface-container-lowest)] text-[var(--md-primary)] shadow-sm flex items-center justify-center';
+            btnGrid.className = 'p-2 rounded text-[var(--md-on-surface-variant)] hover:bg-[var(--md-surface-container-high)] flex items-center justify-center';
+        }
+        
+        renderTryouts();
+    };
 
     // Load user info first
     apiFetch('/auth/me').then(function(user) {
@@ -128,6 +157,14 @@
         }
 
         emptyState.classList.add('hidden');
+        
+        // Update container layout based on viewMode
+        if (viewMode === 'grid') {
+            container.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
+        } else {
+            container.className = 'flex flex-col gap-4';
+        }
+        
         container.innerHTML = filtered.map(function(t) {
             var catBadge = t.categoryName || (t.category && t.category.name) || t.category_name || '';
             var tierBadge = t.tier || t.membership_tier || t.required_tier || 'FREE';

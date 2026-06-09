@@ -39,10 +39,10 @@
                     <tr class="border-b border-[var(--border-default)] bg-[var(--bg-surface-hover)]">
                         <th class="px-6 py-4 font-label-sm font-bold text-[var(--text-secondary)] uppercase tracking-wider">Judul Materi</th>
                         <th class="px-6 py-4 font-label-sm font-bold text-[var(--text-secondary)] uppercase tracking-wider">Kategori</th>
-                        <th class="px-6 py-4 font-label-sm font-bold text-[var(--text-secondary)] uppercase tracking-wider">Tier</th>
+                        <th class="px-6 py-4 font-label-sm font-bold text-[var(--text-secondary)] uppercase tracking-wider text-center">Tier</th>
                         <th class="px-6 py-4 font-label-sm font-bold text-[var(--text-secondary)] uppercase tracking-wider text-center">Urutan</th>
-                        <th class="px-6 py-4 font-label-sm font-bold text-[var(--text-secondary)] uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-4 font-label-sm font-bold text-[var(--text-secondary)] uppercase tracking-wider text-right">Aksi</th>
+                        <th class="px-6 py-4 font-label-sm font-bold text-[var(--text-secondary)] uppercase tracking-wider text-center">Status</th>
+                        <th class="px-6 py-4 font-label-sm font-bold text-[var(--text-secondary)] uppercase tracking-wider text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody id="materials-table-body" class="divide-y divide-[var(--border-default)] bg-[var(--bg-surface)]">
@@ -148,17 +148,17 @@
                         <td class="px-6 py-4">
                             <span class="text-body-sm text-[var(--text-secondary)]">${escHtml(getCategoryName(m.category_id))}</span>
                         </td>
-                        <td class="px-6 py-4">
+                        <td class="px-6 py-4 text-center">
                             ${tierBadge(m.required_tier)}
                         </td>
                         <td class="px-6 py-4 text-center">
                             <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[var(--bg-surface-hover)] text-[var(--text-secondary)] font-bold font-mono text-sm border border-[var(--border-default)]">${m.order || 0}</span>
                         </td>
-                        <td class="px-6 py-4">
+                        <td class="px-6 py-4 text-center">
                             ${publishedBadge(m.is_published)}
                         </td>
-                        <td class="px-6 py-4 text-right">
-                            <div class="flex items-center justify-end gap-2">
+                        <td class="px-6 py-4 text-center">
+                            <div class="flex items-center justify-center gap-2">
                                 <button onclick="navigateTo('/admin/materials/${m.id}/edit')" class="w-8 h-8 rounded-full flex items-center justify-center text-[var(--primary)] hover:bg-[var(--primary-subtle)] transition-colors" title="Edit Materi">
                                     <span class="material-symbols-outlined text-[18px]">edit</span>
                                 </button>

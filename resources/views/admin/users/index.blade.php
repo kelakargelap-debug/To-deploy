@@ -21,15 +21,15 @@
     {{-- Users Table --}}
     <x-data-table>
         <table class="w-full">
-            <thead>
+            <thead class="bg-[var(--bg-surface-hover)] border-b border-[var(--border-default)]">
                 <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Tier</th>
-                    <th>Status</th>
-                    <th>Active</th>
-                    <th>Actions</th>
+                    <th class="py-3 px-4 text-left font-label-sm uppercase text-[var(--text-secondary)]">Name</th>
+                    <th class="py-3 px-4 text-left font-label-sm uppercase text-[var(--text-secondary)]">Email</th>
+                    <th class="py-3 px-4 text-center font-label-sm uppercase text-[var(--text-secondary)]">Role</th>
+                    <th class="py-3 px-4 text-center font-label-sm uppercase text-[var(--text-secondary)]">Tier</th>
+                    <th class="py-3 px-4 text-center font-label-sm uppercase text-[var(--text-secondary)]">Status</th>
+                    <th class="py-3 px-4 text-center font-label-sm uppercase text-[var(--text-secondary)]">Active</th>
+                    <th class="py-3 px-4 text-center font-label-sm uppercase text-[var(--text-secondary)]">Actions</th>
                 </tr>
             </thead>
             <tbody id="users-table-body">
@@ -118,15 +118,15 @@
 
             if (data.data && data.data.length) {
                 tbody.innerHTML = data.data.map(u => `
-                    <tr>
-                        <td><span class="font-medium text-[var(--text-primary)]">${escHtml(u.name)}</span></td>
-                        <td>${escHtml(u.email)}</td>
-                        <td>${roleBadge(u.role)}</td>
-                        <td>${tierBadge(u.membership_tier)}</td>
-                        <td>${statusBadge(u.membership_status)}</td>
-                        <td>${activeBadge(u.is_active)}</td>
-                        <td>
-                            <div class="flex gap-2">
+                    <tr class="border-b border-[var(--border-default)] hover:bg-[var(--bg-surface-hover)]">
+                        <td class="py-4 px-4 align-middle text-left"><span class="font-medium text-[var(--text-primary)]">${escHtml(u.name)}</span></td>
+                        <td class="py-4 px-4 align-middle text-left">${escHtml(u.email)}</td>
+                        <td class="py-4 px-4 align-middle text-center">${roleBadge(u.role)}</td>
+                        <td class="py-4 px-4 align-middle text-center">${tierBadge(u.membership_tier)}</td>
+                        <td class="py-4 px-4 align-middle text-center">${statusBadge(u.membership_status)}</td>
+                        <td class="py-4 px-4 align-middle text-center">${activeBadge(u.is_active)}</td>
+                        <td class="py-4 px-4 align-middle">
+                            <div class="flex gap-2 justify-center">
                                 <button onclick="navigateTo('/admin/users/${u.id}/edit')" class="btn-ghost btn-sm text-[var(--info)]">Edit</button>
                                 <button onclick="openResetModal(${u.id}, '${escHtml(u.name)}')" class="btn-ghost btn-sm text-[var(--warning)]">Reset PW</button>
                                 ${window.SKB.isSuperAdmin ? `<button onclick="openDeleteModal(${u.id}, '${escHtml(u.name)}')" class="btn-ghost btn-sm text-[var(--danger)]">Delete</button>` : ''}

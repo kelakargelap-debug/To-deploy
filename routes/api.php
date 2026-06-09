@@ -66,6 +66,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('/questions/{id}', [AdminController::class, 'updateQuestion']);
         Route::delete('/questions/{id}', [AdminController::class, 'deleteQuestion']);
 
+        Route::get('/materials/{id}', [AdminController::class, 'materialDetail']);
         Route::post('/materials', [AdminController::class, 'createMaterial']);
         Route::patch('/materials/{id}', [AdminController::class, 'updateMaterial']);
         Route::delete('/materials/{id}', [AdminController::class, 'deleteMaterial']);

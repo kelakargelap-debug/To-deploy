@@ -13,13 +13,13 @@
     {{-- Categories Table --}}
     <x-data-table>
         <table class="w-full">
-            <thead>
+            <thead class="bg-[var(--bg-surface-hover)] border-b border-[var(--border-default)]">
                 <tr>
-                    <th>Name</th>
-                    <th>Slug</th>
-                    <th>Description</th>
-                    <th>Order</th>
-                    <th>Actions</th>
+                    <th class="py-3 px-4 text-left font-label-sm uppercase text-[var(--text-secondary)]">Name</th>
+                    <th class="py-3 px-4 text-left font-label-sm uppercase text-[var(--text-secondary)]">Slug</th>
+                    <th class="py-3 px-4 text-left font-label-sm uppercase text-[var(--text-secondary)]">Description</th>
+                    <th class="py-3 px-4 text-center font-label-sm uppercase text-[var(--text-secondary)]">Order</th>
+                    <th class="py-3 px-4 text-center font-label-sm uppercase text-[var(--text-secondary)]">Actions</th>
                 </tr>
             </thead>
             <tbody id="categories-table-body">
@@ -89,13 +89,13 @@
 
             if (categories.length) {
                 tbody.innerHTML = categories.map(c => `
-                    <tr>
-                        <td><span class="font-medium text-[var(--text-primary)]">${escHtml(c.name)}</span></td>
-                        <td>${escHtml(c.slug)}</td>
-                        <td class="max-w-xs truncate">${escHtml(c.description) || '-'}</td>
-                        <td>${c.order}</td>
-                        <td>
-                            <div class="flex gap-2">
+                    <tr class="border-b border-[var(--border-default)] hover:bg-[var(--bg-surface-hover)]">
+                        <td class="py-4 px-4 align-middle text-left"><span class="font-medium text-[var(--text-primary)]">${escHtml(c.name)}</span></td>
+                        <td class="py-4 px-4 align-middle text-left">${escHtml(c.slug)}</td>
+                        <td class="py-4 px-4 align-middle text-left max-w-xs truncate">${escHtml(c.description) || '-'}</td>
+                        <td class="py-4 px-4 align-middle text-center">${c.order}</td>
+                        <td class="py-4 px-4 align-middle">
+                            <div class="flex gap-2 justify-center">
                                 <button onclick="openEditModal(${c.id})" class="btn-ghost btn-sm text-[var(--info)]">Edit</button>
                                 <button onclick="openDeleteCatModal(${c.id}, '${escHtml(c.name)}')" class="btn-ghost btn-sm text-[var(--danger)]">Delete</button>
                             </div>

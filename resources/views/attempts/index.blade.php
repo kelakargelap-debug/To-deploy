@@ -1,7 +1,7 @@
 @extends('app')
 
 @section('content')
-<div class="max-w-5xl mx-auto">
+<div class="max-w-7xl mx-auto w-full">
     <x-page-header title="Nilai Saya" subtitle="Riwayat percobaan tryout kamu" />
 
     <!-- Loading State -->
@@ -17,13 +17,13 @@
     <div id="attempts-table" class="hidden">
         <x-data-table>
             <table class="w-full">
-                <thead>
+                <thead class="bg-[var(--bg-surface-hover)] border-b border-[var(--border-default)]">
                     <tr>
-                        <th>Tryout</th>
-                        <th>Tanggal</th>
-                        <th>Status</th>
-                        <th>Nilai</th>
-                        <th class="text-right">Aksi</th>
+                        <th class="py-3 px-4 text-left font-label-sm uppercase text-[var(--text-secondary)]">Tryout</th>
+                        <th class="py-3 px-4 text-left font-label-sm uppercase text-[var(--text-secondary)]">Tanggal</th>
+                        <th class="py-3 px-4 text-center font-label-sm uppercase text-[var(--text-secondary)]">Status</th>
+                        <th class="py-3 px-4 text-center font-label-sm uppercase text-[var(--text-secondary)]">Nilai</th>
+                        <th class="py-3 px-4 text-center font-label-sm uppercase text-[var(--text-secondary)]">Aksi</th>
                     </tr>
                 </thead>
                 <tbody id="attempts-list"></tbody>
@@ -34,7 +34,7 @@
     <!-- Empty State -->
     <div id="attempts-empty" class="hidden">
         <x-empty-state 
-            icon='<svg class="w-16 h-16 text-[var(--text-muted)] mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>' 
+            icon='<svg class="w-16 h-16 text-[var(--text-muted)] mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>' 
             title="Belum Ada Percobaan" 
             description="Kamu belum mengerjakan tryout. Mulai tryout pertama kamu!" 
         >
@@ -60,22 +60,18 @@
         var list = document.getElementById('attempts-list');
 
         list.innerHTML = attempts.map(function (a) {
-            var statusBadge = a.status === 'COMPLETED' || a.status === 'SUBMITTED'
-                ? '<x-badge type="success" text="Selesai" />'
-                : '<span class="badge badge-danger">Tidak Selesai</span>';
-            // Since we can't use Blade x-badge in JS, use plain badge classes
             var statusClass = a.status === 'COMPLETED' || a.status === 'SUBMITTED' ? 'badge badge-success' : 'badge badge-danger';
             var statusText = a.status === 'COMPLETED' || a.status === 'SUBMITTED' ? 'Selesai' : 'Tidak Selesai';
             var scoreDisplay = a.score !== null && a.score !== undefined ? a.score + '%' : '-';
             var dateDisplay = a.completed_at || a.submitted_at || a.created_at || '-';
             var viewLink = '/tryouts/' + (a.tryoutSlug || a.tryout_slug || '') + '/result/' + a.id;
 
-            return '<tr>' +
-                '<td><span class="font-medium text-[var(--text-primary)]">' + (a.tryoutTitle || a.tryout_title || 'Tryout') + '</span></td>' +
-                '<td><span class="text-[var(--text-secondary)]">' + dateDisplay + '</span></td>' +
-                '<td><span class="' + statusClass + '">' + statusText + '</span></td>' +
-                '<td><span class="font-mono font-bold text-[var(--text-primary)]">' + scoreDisplay + '</span></td>' +
-                '<td class="text-right"><a href="' + viewLink + '" class="btn-ghost btn-sm text-[var(--accent)]">Lihat</a></td>' +
+            return '<tr class="border-b border-[var(--border-default)] hover:bg-[var(--bg-surface-hover)]">' +
+                '<td class="py-4 px-4 align-middle text-left"><span class="font-medium text-[var(--text-primary)]">' + (a.tryoutTitle || a.tryout_title || 'Tryout') + '</span></td>' +
+                '<td class="py-4 px-4 align-middle text-left"><span class="text-[var(--text-secondary)]">' + dateDisplay + '</span></td>' +
+                '<td class="py-4 px-4 align-middle text-center"><span class="' + statusClass + '">' + statusText + '</span></td>' +
+                '<td class="py-4 px-4 align-middle text-center"><span class="font-mono font-bold text-[var(--text-primary)]">' + scoreDisplay + '</span></td>' +
+                '<td class="py-4 px-4 align-middle text-center"><a href="' + viewLink + '" class="btn-ghost btn-sm text-[var(--accent)]">Lihat</a></td>' +
                 '</tr>';
         }).join('');
     }).catch(function () {

@@ -176,12 +176,6 @@
                 }
             });
 
-            // Page leave warning
-            window.onbeforeunload = function (e) {
-                e.preventDefault();
-                e.returnValue = 'Kamu memiliki ujian yang sedang berjalan. Yakin ingin keluar?';
-            };
-
             // Load exam data
             function loadExam() {
                 apiFetch('/tryouts/' + tryoutSlug + '/start', {
@@ -429,7 +423,7 @@
                 submitBtn.textContent = 'Menyimpan...';
 
                 clearInterval(timerInterval);
-                window.onbeforeunload = null;
+
 
                 apiFetch('/tryouts/' + tryoutSlug + '/submit', {
                     method: 'POST',
@@ -441,7 +435,7 @@
                     alert('Gagal menyimpan jawaban: ' + err.message);
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Ya, Selesai';
-                    window.onbeforeunload = function (e) { e.preventDefault(); e.returnValue = ''; };
+
                 });
             };
 

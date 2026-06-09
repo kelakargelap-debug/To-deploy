@@ -12,15 +12,15 @@
         {{-- Tryouts Table --}}
         <x-data-table>
             <table class="w-full">
-                <thead>
+                <thead class="bg-[var(--bg-surface-hover)] border-b border-[var(--border-default)]">
                     <tr>
-                        <th>Title</th>
-                        <th>Category</th>
-                        <th>Status</th>
-                        <th>Tier</th>
-                        <th>Questions</th>
-                        <th>Duration</th>
-                        <th>Actions</th>
+                        <th class="py-3 px-4 text-left font-label-sm uppercase text-[var(--text-secondary)]">Title</th>
+                        <th class="py-3 px-4 text-left font-label-sm uppercase text-[var(--text-secondary)]">Category</th>
+                        <th class="py-3 px-4 text-center font-label-sm uppercase text-[var(--text-secondary)]">Status</th>
+                        <th class="py-3 px-4 text-center font-label-sm uppercase text-[var(--text-secondary)]">Tier</th>
+                        <th class="py-3 px-4 text-center font-label-sm uppercase text-[var(--text-secondary)]">Questions</th>
+                        <th class="py-3 px-4 text-center font-label-sm uppercase text-[var(--text-secondary)]">Duration</th>
+                        <th class="py-3 px-4 text-center font-label-sm uppercase text-[var(--text-secondary)]">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="tryouts-table-body">
@@ -83,15 +83,15 @@
 
                     if (tryouts && tryouts.length) {
                         tbody.innerHTML = tryouts.map(t => {
-                            return '<tr>'
-                                + '<td><span class="font-medium text-[var(--text-primary)]">' + escHtml(t.title) + '</span></td>'
-                                + '<td>' + escHtml(getCategoryName(t.category_id)) + '</td>'
-                                + '<td>' + statusBadge(t.status) + '</td>'
-                                + '<td>' + tierBadge(t.required_tier) + '</td>'
-                                + '<td><span class="font-mono font-bold">' + t.total_questions + '</span></td>'
-                                + '<td>' + t.duration_minutes + ' min</td>'
-                                + '<td>'
-                                + '<div class="flex gap-2">'
+                            return '<tr class="border-b border-[var(--border-default)] hover:bg-[var(--bg-surface-hover)]">'
+                                + '<td class="py-4 px-4 align-middle"><span class="font-medium text-[var(--text-primary)]">' + escHtml(t.title) + '</span></td>'
+                                + '<td class="py-4 px-4 align-middle text-left">' + escHtml(getCategoryName(t.category_id)) + '</td>'
+                                + '<td class="py-4 px-4 align-middle text-center">' + statusBadge(t.status) + '</td>'
+                                + '<td class="py-4 px-4 align-middle text-center">' + tierBadge(t.required_tier) + '</td>'
+                                + '<td class="py-4 px-4 align-middle text-center"><span class="font-mono font-bold">' + t.total_questions + '</span></td>'
+                                + '<td class="py-4 px-4 align-middle text-center">' + t.duration_minutes + ' min</td>'
+                                + '<td class="py-4 px-4 align-middle">'
+                                + '<div class="flex gap-2 justify-center">'
                                 + '<button onclick="navigateTo(\'/admin/tryouts/' + t.id + '/questions\')" class="btn-ghost btn-sm text-[var(--success)]">Questions</button>'
                                 + '<button onclick="navigateTo(\'/admin/tryouts/' + t.id + '/edit\')" class="btn-ghost btn-sm text-[var(--info)]">Edit</button>'
                                 + '<button onclick="openDeleteTryoutModal(' + t.id + ', \'' + escHtml(t.title) + '\')" class="btn-ghost btn-sm text-[var(--danger)]">Delete</button>'

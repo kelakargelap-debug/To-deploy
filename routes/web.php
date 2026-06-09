@@ -69,7 +69,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::get('/change-password', function () {
-        return view('auth.change-password');
+        return redirect()->route('profile');
     })->name('change-password');
 
     Route::post('/change-password', function (\Illuminate\Http\Request $request) {
