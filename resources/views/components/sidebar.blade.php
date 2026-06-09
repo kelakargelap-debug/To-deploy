@@ -10,7 +10,7 @@
                 S
             </div>
             <div class="sidebar-text">
-                <h2 class="text-headline-sm font-bold" style="color: var(--md-primary); white-space: nowrap;">SKB Tryout</h2>
+                <h2 class="text-headline-sm font-bold" style="color: var(--md-primary); white-space: nowrap;">Tryout</h2>
                 <p class="text-label-sm" style="color: var(--md-outline); white-space: nowrap;">Examination Portal</p>
             </div>
         </div>

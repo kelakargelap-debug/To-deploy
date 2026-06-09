@@ -6,7 +6,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SKB Tryout — Platform Tryout Online</title>
+    <title>Platform Tryout Online</title>
     <!-- Google Fonts: Manrope -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -137,7 +137,7 @@
                             onclick="toggleMobileSidebar()">
                             <span class="material-symbols-outlined">menu</span>
                         </button>
-                        <h1 class="text-headline-sm font-bold" style="color: var(--md-primary);">SKB Tryout</h1>
+                        <h1 class="text-headline-sm font-bold" style="color: var(--md-primary);">Tryout</h1>
                     </div>
 
                     <div class="flex items-center gap-3">

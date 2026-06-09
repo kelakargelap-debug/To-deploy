@@ -5,7 +5,7 @@
     {{-- Page Header --}}
     <div class="mb-8">
         <h2 class="text-display-lg" style="color: var(--md-on-surface);">Admin Dashboard</h2>
-        <p class="text-body-lg mt-1" style="color: var(--md-on-surface-variant);">Ringkasan sistem Tryout SKB</p>
+        <p class="text-body-lg mt-1" style="color: var(--md-on-surface-variant);">Ringkasan sistem Tryout</p>
     </div>
 
     {{-- Stats Cards --}}

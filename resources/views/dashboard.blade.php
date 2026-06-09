@@ -85,9 +85,9 @@
                 style="background: var(--md-primary-fixed); color: var(--md-primary);">
                 <span class="material-symbols-outlined text-3xl">school</span>
             </div>
-            <h3 class="text-headline-md mb-2" style="color: var(--md-on-surface);">Jelajahi Tryout SKB</h3>
+            <h3 class="text-headline-md mb-2" style="color: var(--md-on-surface);">Jelajahi Tryout</h3>
             <p class="text-body-md max-w-md mx-auto mb-6" style="color: var(--md-on-surface-variant);">
-                Uji kemampuanmu dengan berbagai tryout SKB yang tersedia. Dapatkan analisis nilai dan pembahasan lengkap.
+                Uji kemampuanmu dengan berbagai tryout yang tersedia. Dapatkan analisis nilai dan pembahasan lengkap.
             </p>
             <a href="{{ route('tryouts') }}" class="btn-primary">
                 <span class="material-symbols-outlined text-lg">quiz</span>

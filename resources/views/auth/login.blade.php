@@ -9,7 +9,7 @@
                     style="background: var(--md-primary); color: var(--md-on-primary);">
                     <span class="material-symbols-outlined text-3xl" data-weight="fill">school</span>
                 </div>
-                <h1 class="text-display-lg" style="color: var(--md-on-surface);">SKB Tryout</h1>
+                <h1 class="text-display-lg" style="color: var(--md-on-surface);">Tryout</h1>
                 <p class="text-body-md mt-1" style="color: var(--md-on-surface-variant);">Platform ujian kompetensi cerdas</p>
             </div>
 
