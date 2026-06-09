@@ -4,12 +4,10 @@
     <div class="max-w-4xl mx-auto">
         <!-- Material title -->
         <x-page-header title="Loading..." breadcrumb='<a href="/materials">Materi</a><span class="breadcrumb-sep">/</span><span>Detail</span>'>
-            <x-slot:actions>
                 <div class="flex items-center gap-2">
                     <span id="material-tier-badge" class="badge badge-free">FREE</span>
                     <span id="material-category-badge" class="badge badge-neutral hidden"></span>
                 </div>
-            </x-slot:actions>
         </x-page-header>
 
         <!-- Premium gate message -->
