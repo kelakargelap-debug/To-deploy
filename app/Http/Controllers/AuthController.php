@@ -52,12 +52,18 @@ class AuthController extends Controller
 
         // If pending verification, they need to set up TOTP
         if ($user->status === 'pending_verification') {
-            $this->logLoginAttempt($user->id, $validated['email'], 'login_failed', 'blocked', 'unverified', $request);
-            return response()->json([
-                'error' => 'unverified',
-                'message' => 'Akun belum diverifikasi. Silakan setup Authenticator.',
-                'requires_totp_setup' => true,
-            ], 403);
+            if ($user->isSuperAdmin()) {
+                $user->status = 'active';
+                $user->email_verified_at = now();
+                $user->save();
+            } else {
+                $this->logLoginAttempt($user->id, $validated['email'], 'login_failed', 'blocked', 'unverified', $request);
+                return response()->json([
+                    'error' => 'unverified',
+                    'message' => 'Akun belum diverifikasi. Silakan setup Authenticator.',
+                    'requires_totp_setup' => true,
+                ], 403);
+            }
         }
 
         // Check trusted device
@@ -74,7 +80,7 @@ class AuthController extends Controller
             }
         }
 
-        if ($isTrusted) {
+        if ($isTrusted || $user->isSuperAdmin()) {
             // Direct login
             return $this->completeLogin($user, $request);
         }

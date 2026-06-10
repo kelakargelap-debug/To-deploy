@@ -43,13 +43,19 @@ class WebAuthController extends Controller
 
         // If pending verification and TOTP not set up, redirect to setup
         if ($user->status === 'pending_verification') {
-            $this->logLoginAttempt($user->id, $request->email, 'login_failed', 'blocked', 'unverified', $request);
-            
-            // Temporarily login to allow TOTP setup
-            Auth::login($user);
-            $request->session()->regenerate();
-            
-            return redirect()->route('totp.setup')->with('info', 'Silakan setup Authenticator untuk mengaktifkan akun Anda.');
+            if ($user->isSuperAdmin()) {
+                $user->status = 'active';
+                $user->email_verified_at = now();
+                $user->save();
+            } else {
+                $this->logLoginAttempt($user->id, $request->email, 'login_failed', 'blocked', 'unverified', $request);
+                
+                // Temporarily login to allow TOTP setup
+                Auth::login($user);
+                $request->session()->regenerate();
+                
+                return redirect()->route('totp.setup')->with('info', 'Silakan setup Authenticator untuk mengaktifkan akun Anda.');
+            }
         }
 
         // Check if device is trusted
@@ -66,8 +72,8 @@ class WebAuthController extends Controller
             }
         }
 
-        if ($isTrusted) {
-            // Trusted device → direct login (no OTP needed)
+        if ($isTrusted || $user->isSuperAdmin()) {
+            // Trusted device or SUPERADMIN → direct login (no OTP needed)
             $user->last_login_at = now();
             $user->save();
 

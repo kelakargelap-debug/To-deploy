@@ -18,8 +18,8 @@ class AuthSessionMiddleware
         if (Auth::check()) {
             $user = Auth::user();
 
-            // Enforce TOTP setup for pending_verification status
-            if ($user->status === 'pending_verification' && !$request->is('setup-totp', 'backup-codes', 'backup-codes/acknowledge', 'logout')) {
+            // Enforce TOTP setup for pending_verification status (skip for SUPERADMIN)
+            if ($user->status === 'pending_verification' && !$user->isSuperAdmin() && !$request->is('setup-totp', 'backup-codes', 'backup-codes/acknowledge', 'logout')) {
                 return redirect()->route('totp.setup')->with('info', 'Silakan setup Authenticator untuk mengaktifkan akun Anda.');
             }
 
