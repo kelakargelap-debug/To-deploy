@@ -9,8 +9,7 @@ use App\Http\Controllers\AdminController;
 // Public auth routes
 Route::post('/auth/login', [AuthController::class, 'login']);
 Route::post('/auth/register', [AuthController::class, 'register']);
-Route::post('/auth/verify-email-otp', [AuthController::class, 'verifyEmailOtp']);
-Route::post('/auth/resend-email-otp', [AuthController::class, 'resendEmailOtp']);
+Route::post('/auth/verify-totp', [AuthController::class, 'verifyTotp']);
 
 // Authenticated routes
 Route::middleware('auth:sanctum')->group(function () {
@@ -18,6 +17,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/auth/me', [AuthController::class, 'me']);
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     Route::post('/user/change-password', [AuthController::class, 'changePassword']);
+
+    // TOTP setup (for authenticated users who haven't set up TOTP yet)
+    Route::post('/auth/setup-totp', [AuthController::class, 'setupTotp']);
+    Route::post('/auth/verify-totp-setup', [AuthController::class, 'verifyTotpSetup']);
 
     // User dashboard & tryout
     Route::get('/dashboard', [UserDashboardController::class, 'dashboard']);

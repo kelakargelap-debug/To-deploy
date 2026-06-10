@@ -1,4 +1,8 @@
-@props(['id', 'label', 'type' => 'text', 'placeholder' => '', 'required' => false, 'hint' => null])
+@props(['id', 'label', 'type' => 'text', 'placeholder' => '', 'required' => false, 'hint' => null, 'name' => null])
+
+@php
+    $inputName = $name ?? $id;
+@endphp
 
 <div class="form-group">
     <label for="{{ $id }}" class="form-label">
@@ -11,29 +15,29 @@
     @if($type === 'textarea')
         <textarea 
             id="{{ $id }}" 
-            name="{{ $id }}" 
+            name="{{ $inputName }}" 
             class="input-field @error($id) input-error @enderror {{ $attributes->get('class') }}" 
             placeholder="{{ $placeholder }}" 
             {{ $required ? 'required' : '' }}
-            {!! $attributes->except('class') !!}>{{ $slot }}</textarea>
+            {!! $attributes->except(['class', 'name']) !!}>{{ $slot }}</textarea>
     @elseif($type === 'select')
         <select 
             id="{{ $id }}" 
-            name="{{ $id }}" 
+            name="{{ $inputName }}" 
             class="input-field @error($id) input-error @enderror {{ $attributes->get('class') }}" 
             {{ $required ? 'required' : '' }}
-            {!! $attributes->except('class') !!}>
+            {!! $attributes->except(['class', 'name']) !!}>
             {{ $slot }}
         </select>
     @else
         <input 
             type="{{ $type }}" 
             id="{{ $id }}" 
-            name="{{ $id }}" 
+            name="{{ $inputName }}" 
             class="input-field @error($id) input-error @enderror {{ $attributes->get('class') }}" 
             placeholder="{{ $placeholder }}" 
             {{ $required ? 'required' : '' }}
-            {!! $attributes->except('class') !!}
+            {!! $attributes->except(['class', 'name']) !!}
             value="{{ $attributes->get('value') }}">
     @endif
 

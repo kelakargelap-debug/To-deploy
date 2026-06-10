@@ -6,11 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\TrustedDevice;
 use App\Models\LoginHistory;
 use App\Models\AuthSession;
-use App\Models\VerificationOtp;
-use App\Mail\OtpMail;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
+use PragmaRX\Google2FA\Google2FA;
 
 class SecurityController extends Controller
 {
@@ -63,57 +60,45 @@ class SecurityController extends Controller
         return redirect()->back()->with('success', 'Perangkat berhasil dihapus.');
     }
 
+    /**
+     * Logout from all devices — requires Authenticator OTP confirmation.
+     */
     public function requestLogoutAll(Request $request)
     {
-        $user = Auth::user();
-        
-        VerificationOtp::where('user_id', $user->id)
-            ->where('purpose', 'logout_all_devices')
-            ->whereNull('used_at')
-            ->update(['used_at' => now()]);
-
-        $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-
-        VerificationOtp::create([
-            'user_id' => $user->id,
-            'target_type' => 'email',
-            'target_value' => $user->email,
-            'otp_hash' => Hash::make($code),
-            'purpose' => 'logout_all_devices',
-            'expires_at' => now()->addMinutes(5),
-            'last_sent_at' => now(),
-        ]);
-
-        Mail::to($user->email)->send(new OtpMail($code, $user->name, 'logout_all_devices'));
-
-        return redirect()->back()->with('show_logout_otp', true)->with('info', 'Kode OTP telah dikirim ke email Anda untuk konfirmasi Logout Semua Perangkat.');
+        // Just show the OTP input modal
+        return redirect()->back()->with('show_logout_otp', true)->with('info', 'Masukkan kode dari aplikasi Authenticator untuk konfirmasi.');
     }
 
+    /**
+     * Confirm logout all with Authenticator OTP.
+     */
     public function confirmLogoutAll(Request $request)
     {
         $request->validate([
-            'otp' => 'required|string|size:6'
+            'otp' => 'required|string|min:6|max:8'
         ]);
 
         $user = Auth::user();
-        
-        $otpRecord = VerificationOtp::where('user_id', $user->id)
-            ->where('purpose', 'logout_all_devices')
-            ->whereNull('used_at')
-            ->orderBy('created_at', 'desc')
-            ->first();
+        $google2fa = new Google2FA();
 
-        if (!$otpRecord || now()->gt($otpRecord->expires_at) || $otpRecord->attempt_count >= 5) {
-            return redirect()->back()->with('show_logout_otp', true)->withErrors(['otp' => 'Kode OTP salah atau telah kedaluwarsa.']);
+        $otp = $request->otp;
+        $valid = false;
+
+        // Try TOTP
+        if (strlen($otp) === 6 && ctype_digit($otp)) {
+            $valid = $google2fa->verifyKey($user->totp_secret, $otp, 1);
         }
 
-        if (!Hash::check($request->otp, $otpRecord->otp_hash)) {
-            $otpRecord->increment('attempt_count');
-            return redirect()->back()->with('show_logout_otp', true)->withErrors(['otp' => 'Kode OTP salah atau telah kedaluwarsa.']);
+        // Try backup code
+        if (!$valid) {
+            $valid = $user->useBackupCode(strtoupper($otp));
         }
 
-        $otpRecord->used_at = now();
-        $otpRecord->save();
+        if (!$valid) {
+            return redirect()->back()
+                ->with('show_logout_otp', true)
+                ->withErrors(['otp' => 'Kode OTP salah atau tidak valid.']);
+        }
 
         // Revoke all sessions except current
         $currentSessionHash = hash('sha256', $request->session()->getId());

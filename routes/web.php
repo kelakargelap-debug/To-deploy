@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WebAuthController;
+use App\Http\Controllers\TotpController;
 
 // Auth routes (session-based for web interface)
 Route::get('/login', [WebAuthController::class, 'showLogin'])->name('login');
@@ -9,8 +10,17 @@ Route::post('/login', [WebAuthController::class, 'login']);
 Route::post('/register', [WebAuthController::class, 'register'])->name('register');
 Route::post('/logout', [WebAuthController::class, 'logout'])->name('logout');
 
-Route::get('/verify-otp', [WebAuthController::class, 'showVerifyOtp'])->name('verify-otp');
-Route::post('/verify-otp', [WebAuthController::class, 'verifyOtp']);
+// TOTP verification during login (no auth required, session-based)
+Route::get('/verify-totp', [TotpController::class, 'showVerifyLogin'])->name('totp.verify-login');
+Route::post('/verify-totp', [TotpController::class, 'verifyLogin']);
+
+// TOTP setup (requires auth — user is logged in but may be pending_verification)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/setup-totp', [TotpController::class, 'showSetup'])->name('totp.setup');
+    Route::post('/setup-totp', [TotpController::class, 'verifySetup']);
+    Route::get('/backup-codes', [TotpController::class, 'showBackupCodes'])->name('totp.backup-codes');
+    Route::post('/backup-codes/acknowledge', [TotpController::class, 'acknowledgeBackupCodes'])->name('totp.acknowledge-backup');
+});
 
 // Session toggle routes (session-based auth)
 Route::middleware(['auth'])->group(function () {
@@ -69,13 +79,16 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/security/logout-all', [\App\Http\Controllers\SecurityController::class, 'requestLogoutAll'])->name('security.logout-all');
     Route::post('/security/logout-all/confirm', [\App\Http\Controllers\SecurityController::class, 'confirmLogoutAll'])->name('security.logout-all.confirm');
 
+    // TOTP management from security settings
+    Route::post('/security/totp/reset', [TotpController::class, 'resetTotp'])->name('security.totp.reset');
+    Route::post('/security/totp/regenerate-backup', [TotpController::class, 'regenerateBackupCodes'])->name('security.totp.regenerate-backup');
+
     Route::put('/profile', function (\Illuminate\Http\Request $request) {
         $user = auth()->user();
         $request->validate([
             'name' => 'required|string|max:255',
-            'phone' => 'nullable|string|max:20'
         ]);
-        $user->update(['name' => $request->name, 'phone' => $request->phone]);
+        $user->update(['name' => $request->name]);
         return redirect()->back()->with('success', 'Profil berhasil diperbarui.');
     });
 

@@ -17,6 +17,12 @@ class AuthSessionMiddleware
     {
         if (Auth::check()) {
             $user = Auth::user();
+
+            // Enforce TOTP setup for pending_verification status
+            if ($user->status === 'pending_verification' && !$request->is('setup-totp', 'backup-codes', 'backup-codes/acknowledge', 'logout')) {
+                return redirect()->route('totp.setup')->with('info', 'Silakan setup Authenticator untuk mengaktifkan akun Anda.');
+            }
+
             $tokenHash = hash('sha256', $request->session()->getId());
 
             $session = AuthSession::firstOrCreate(

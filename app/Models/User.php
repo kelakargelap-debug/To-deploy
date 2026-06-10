@@ -12,8 +12,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-#[Fillable(['name', 'email', 'phone', 'password', 'role', 'membership_tier', 'membership_status', 'membership_expiry', 'is_active', 'status', 'phone_verified_at', 'last_login_at'])]
-#[Hidden(['password', 'remember_token'])]
+#[Fillable(['name', 'email', 'password', 'role', 'membership_tier', 'membership_status', 'membership_expiry', 'is_active', 'status', 'last_login_at', 'totp_secret', 'totp_enabled', 'backup_codes'])]
+#[Hidden(['password', 'remember_token', 'totp_secret', 'backup_codes'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
@@ -33,9 +33,11 @@ class User extends Authenticatable
             'is_active' => 'boolean',
             'role' => 'string',
             'membership_status' => 'string',
-            'phone_verified_at' => 'datetime',
             'last_login_at' => 'datetime',
             'status' => 'string',
+            'totp_enabled' => 'boolean',
+            'totp_secret' => 'encrypted',
+            'backup_codes' => 'encrypted:array',
         ];
     }
 
@@ -129,5 +131,72 @@ class User extends Authenticatable
         }
 
         return true;
+    }
+
+    /**
+     * Check if TOTP is set up for this user.
+     */
+    public function hasTotpEnabled(): bool
+    {
+        return $this->totp_enabled && !empty($this->totp_secret);
+    }
+
+    /**
+     * Get remaining backup codes count.
+     */
+    public function remainingBackupCodes(): int
+    {
+        $codes = $this->backup_codes;
+        if (!is_array($codes)) {
+            return 0;
+        }
+        return count(array_filter($codes, fn($code) => !($code['used'] ?? false)));
+    }
+
+    /**
+     * Use a backup code. Returns true if the code was valid.
+     */
+    public function useBackupCode(string $inputCode): bool
+    {
+        $codes = $this->backup_codes;
+        if (!is_array($codes)) {
+            return false;
+        }
+
+        foreach ($codes as $key => $code) {
+            if (!($code['used'] ?? false) && hash_equals($code['code'], $inputCode)) {
+                $codes[$key]['used'] = true;
+                $codes[$key]['used_at'] = now()->toIso8601String();
+                $this->backup_codes = $codes;
+                $this->save();
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Generate new backup codes.
+     */
+    public function generateBackupCodes(int $count = 8): array
+    {
+        $codes = [];
+        $plainCodes = [];
+
+        for ($i = 0; $i < $count; $i++) {
+            $code = strtoupper(bin2hex(random_bytes(4))); // 8 char hex codes
+            $plainCodes[] = $code;
+            $codes[] = [
+                'code' => $code,
+                'used' => false,
+                'used_at' => null,
+            ];
+        }
+
+        $this->backup_codes = $codes;
+        $this->save();
+
+        return $plainCodes;
     }
 }

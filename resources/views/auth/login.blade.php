@@ -87,16 +87,6 @@
                             required="true" 
                             autocomplete="email"
                         />
-
-                        <x-form-field 
-                            id="reg-phone" 
-                            name="phone"
-                            label="Nomor HP" 
-                            type="text" 
-                            placeholder="08xxxxxxxxxx (Opsional)" 
-                            required="false" 
-                            autocomplete="tel"
-                        />
                         
                         <x-form-field 
                             id="reg-password" 
@@ -108,6 +98,13 @@
                             minlength="5"
                             autocomplete="new-password"
                         />
+
+                        <div class="p-3 rounded-xl flex gap-2" style="background: var(--md-surface-container); border: 1px solid var(--md-outline-variant);">
+                            <span class="material-symbols-outlined text-sm shrink-0 mt-0.5" style="color: var(--md-primary);">info</span>
+                            <p class="text-label-sm" style="color: var(--md-on-surface-variant);">
+                                Setelah daftar, Anda akan diminta setup <strong>Authenticator</strong> (Google Authenticator / Microsoft Authenticator) untuk mengamankan akun.
+                            </p>
+                        </div>
                         
                         <button type="submit" class="w-full btn-primary mt-2">
                             <span class="material-symbols-outlined text-lg">person_add</span>

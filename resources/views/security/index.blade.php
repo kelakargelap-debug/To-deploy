@@ -70,11 +70,17 @@
                 @if(session('show_logout_otp'))
                     <form method="POST" action="{{ route('security.logout-all.confirm') }}" class="space-y-3">
                         @csrf
-                        <label class="form-label">Masukkan OTP untuk konfirmasi</label>
+                        <label class="form-label flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm" style="color: var(--md-primary);">security</span>
+                            Masukkan kode dari Authenticator
+                        </label>
                         <div class="flex gap-2">
-                            <input type="text" name="otp" class="input-field text-center font-mono" placeholder="000000" maxlength="6" required autofocus>
+                            <input type="text" name="otp" class="input-field text-center font-mono" placeholder="000000" maxlength="8" required autofocus>
                             <button type="submit" class="btn-primary">Konfirmasi</button>
                         </div>
+                        <p class="text-label-sm" style="color: var(--md-outline);">
+                            Bisa juga menggunakan backup code.
+                        </p>
                     </form>
                 @else
                     <form method="POST" action="{{ route('security.logout-all') }}" onsubmit="return confirm('Ini akan mengeluarkan Anda dari semua perangkat lain. Lanjutkan?')">
@@ -110,6 +116,8 @@
                                 Logout Semua
                             @elseif($history->activity_type === 'device_removed')
                                 Hapus Perangkat
+                            @elseif($history->activity_type === 'new_device_detected')
+                                <span style="color: var(--md-primary);">Perangkat Baru</span>
                             @else
                                 {{ str_replace('_', ' ', Str::title($history->activity_type)) }}
                             @endif
@@ -133,5 +141,61 @@
         </div>
 
     </div>
+
+    {{-- TOTP Management Section --}}
+    @if(Auth::user()->totp_enabled)
+    <div class="mt-6 card p-6 sm:p-8 animate-fade-in-up">
+        <div class="flex items-center gap-3 mb-6 pb-4" style="border-bottom: 1px solid var(--md-outline-variant);">
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: var(--md-primary-container); color: var(--md-on-primary-container); border: 1px solid var(--md-primary-container);">
+                <span class="material-symbols-outlined">security</span>
+            </div>
+            <div>
+                <h4 class="text-headline-md" style="color: var(--md-on-surface);">Authenticator (TOTP)</h4>
+                <p class="text-body-sm" style="color: var(--md-on-surface-variant);">Kelola authenticator dan backup codes.</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {{-- Backup Codes Status --}}
+            <div class="p-4 rounded-xl" style="border: 1px solid var(--md-outline-variant);">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="material-symbols-outlined" style="color: var(--md-primary);">key</span>
+                    <h5 class="text-title-md" style="color: var(--md-on-surface);">Backup Codes</h5>
+                </div>
+                <p class="text-body-md mb-3" style="color: var(--md-on-surface-variant);">
+                    Sisa: <strong>{{ Auth::user()->remainingBackupCodes() }}</strong> dari 8 kode
+                </p>
+                <form method="POST" action="{{ route('security.totp.regenerate-backup') }}" class="space-y-3" id="regenerate-form">
+                    @csrf
+                    <input type="text" name="otp" class="input-field text-center font-mono" placeholder="Kode OTP untuk generate ulang" maxlength="6">
+                    <button type="submit" class="btn-secondary w-full flex items-center justify-center gap-2" onclick="return confirm('Backup codes lama akan dihapus. Lanjutkan?')">
+                        <span class="material-symbols-outlined text-lg">refresh</span>
+                        Generate Ulang
+                    </button>
+                </form>
+            </div>
+
+            {{-- Reset TOTP --}}
+            <div class="p-4 rounded-xl" style="border: 1px solid var(--md-outline-variant);">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="material-symbols-outlined" style="color: var(--md-error);">restart_alt</span>
+                    <h5 class="text-title-md" style="color: var(--md-on-surface);">Reset Authenticator</h5>
+                </div>
+                <p class="text-body-sm mb-3" style="color: var(--md-on-surface-variant);">
+                    Reset dan setup ulang authenticator. Semua backup codes akan dihapus.
+                </p>
+                <form method="POST" action="{{ route('security.totp.reset') }}" class="space-y-3">
+                    @csrf
+                    <input type="password" name="password" class="input-field" placeholder="Password Anda" required>
+                    <input type="text" name="otp" class="input-field text-center font-mono" placeholder="Kode OTP" maxlength="6" required>
+                    <button type="submit" class="w-full flex items-center justify-center gap-2 py-3 rounded-lg font-bold" style="background: var(--md-error-container); color: var(--md-on-error-container);" onclick="return confirm('Yakin ingin reset Authenticator?')">
+                        <span class="material-symbols-outlined text-lg">restart_alt</span>
+                        Reset Authenticator
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    @endif
 </div>
 @endsection

@@ -45,6 +45,16 @@
                             @endif
                         </p>
                     </div>
+                    <div>
+                        <p class="text-label-sm uppercase tracking-wider mb-1" style="color: var(--md-outline);">Authenticator</p>
+                        <p class="text-body-md font-medium flex items-center gap-1" style="color: var(--md-on-surface);">
+                            @if(Auth::user()->totp_enabled)
+                                <span class="material-symbols-outlined text-sm" style="color: var(--md-primary);">check_circle</span> Aktif
+                            @else
+                                <span class="material-symbols-outlined text-sm" style="color: var(--md-error);">cancel</span> Belum Aktif
+                            @endif
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -76,10 +86,6 @@
                     <label class="form-label">Email</label>
                     <input type="email" value="{{ Auth::user()->email }}" class="input-field" disabled style="opacity: 0.7; cursor: not-allowed;">
                     <p class="text-label-sm" style="color: var(--md-outline);">Email tidak dapat diubah. Hubungi support.</p>
-                </div>
-                <div class="space-y-2">
-                    <label class="form-label">Nomor HP</label>
-                    <input type="text" name="phone" value="{{ Auth::user()->phone }}" class="input-field" placeholder="08xxxxxxxx">
                 </div>
                 <div class="pt-4 flex justify-end" style="border-top: 1px solid var(--md-outline-variant);">
                     <button type="submit" class="btn-primary">
@@ -128,8 +134,31 @@
                     </button>
                 </div>
             </form>
-            
+
+            {{-- Authenticator Status --}}
             <div class="mt-6 pt-6" style="border-top: 1px solid var(--md-outline-variant);">
+                <h5 class="text-title-md mb-2" style="color: var(--md-on-surface);">Authenticator (TOTP)</h5>
+                @if(Auth::user()->totp_enabled)
+                    <div class="p-3 rounded-xl flex items-center gap-3 mb-3" style="background: var(--md-primary-container); color: var(--md-on-primary-container);">
+                        <span class="material-symbols-outlined">verified_user</span>
+                        <div>
+                            <p class="text-body-md font-bold">Authenticator Aktif</p>
+                            <p class="text-label-sm">Backup codes tersisa: {{ Auth::user()->remainingBackupCodes() }}</p>
+                        </div>
+                    </div>
+                @else
+                    <div class="p-3 rounded-xl flex items-center gap-3 mb-3" style="background: var(--md-error-container); color: var(--md-on-error-container);">
+                        <span class="material-symbols-outlined">gpp_maybe</span>
+                        <p class="text-body-md font-bold">Authenticator Belum Aktif</p>
+                    </div>
+                    <a href="{{ route('totp.setup') }}" class="btn-primary w-full flex items-center justify-center gap-2 mb-3">
+                        <span class="material-symbols-outlined text-lg">security</span>
+                        Setup Authenticator
+                    </a>
+                @endif
+            </div>
+            
+            <div class="mt-4 pt-4" style="border-top: 1px solid var(--md-outline-variant);">
                 <h5 class="text-title-md mb-2" style="color: var(--md-on-surface);">Manajemen Perangkat</h5>
                 <p class="text-body-sm mb-4" style="color: var(--md-on-surface-variant);">Lihat riwayat login dan atur perangkat yang dipercaya.</p>
                 <a href="{{ route('security.index') }}" class="btn-primary w-full flex items-center justify-center gap-2">
