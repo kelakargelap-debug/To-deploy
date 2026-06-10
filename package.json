@@ -15,5 +15,8 @@
     },
     "dependencies": {
         "@hotwired/turbo": "^8.0.23"
+    },
+    "overrides": {
+        "shell-quote": "^1.8.4"
     }
 }

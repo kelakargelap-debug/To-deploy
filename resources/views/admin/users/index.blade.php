@@ -3,19 +3,17 @@
 @section('content')
 <div class="max-w-7xl mx-auto">
     <x-page-header title="Users Management" subtitle="Kelola pengguna aplikasi">
-        <x-slot:action>
-            <div class="flex items-center gap-3">
-                <div class="relative">
-                    <input type="text" id="search-input" placeholder="Search name or email..." class="input-field pl-10 sm:w-64">
-                    <svg class="absolute left-3 top-2.5 h-4 w-4 text-[var(--text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                    </svg>
-                </div>
-                <button id="btn-add-user" class="hidden btn-primary" onclick="navigateTo('/admin/users/create')">
-                    Tambah User
-                </button>
+        <div class="flex items-center gap-3">
+            <div class="relative">
+                <input type="text" id="search-input" placeholder="Search name or email..." class="input-field pl-10 sm:w-64">
+                <svg class="absolute left-3 top-2.5 h-4 w-4 text-[var(--text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
             </div>
-        </x-slot:action>
+            <button id="btn-add-user" class="hidden btn-primary" onclick="navigateTo('/admin/users/create')">
+                Tambah User
+            </button>
+        </div>
     </x-page-header>
 
     {{-- Users Table --}}

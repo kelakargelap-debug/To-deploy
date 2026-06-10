@@ -24,11 +24,13 @@ class AuthSessionMiddleware
             }
 
             $tokenHash = hash('sha256', $request->session()->getId());
+            $deviceId = $request->cookie('device_id');
 
             $session = AuthSession::firstOrCreate(
                 ['session_token_hash' => $tokenHash],
                 [
                     'user_id' => $user->id,
+                    'trusted_device_id' => $deviceId,
                     'ip_address' => $request->ip(),
                     'user_agent' => $request->userAgent(),
                     'last_seen_at' => now(),
@@ -36,6 +38,11 @@ class AuthSessionMiddleware
                     'absolute_expires_at' => now()->addDays(30),
                 ]
             );
+
+            // Sync trusted_device_id if it was not set during firstOrCreate
+            if ($deviceId && $session->trusted_device_id !== $deviceId) {
+                $session->update(['trusted_device_id' => $deviceId]);
+            }
 
             // Check if revoked
             if ($session->revoked_at) {
