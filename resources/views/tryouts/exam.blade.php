@@ -153,6 +153,7 @@
             var remainingSeconds = 0;
             var endTime = null;
             var STORAGE_KEY = 'skb_exam_answers_' + tryoutSlug;
+            window.examSubmitted = false;
 
             // Copy protection
             function disableCopy(e) { e.preventDefault(); return false; }
@@ -173,6 +174,15 @@
                 if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j'))) {
                     e.preventDefault();
                     return false;
+                }
+            });
+
+            // Tab / Reload close protection
+            window.addEventListener('beforeunload', function (e) {
+                if (!window.examSubmitted) {
+                    e.preventDefault();
+                    e.returnValue = 'Kamu memiliki ujian yang sedang berjalan. Yakin ingin keluar?';
+                    return e.returnValue;
                 }
             });
 
@@ -444,6 +454,7 @@
                     method: 'POST',
                     body: JSON.stringify({ attempt_id: attemptId })
                 }).then(function (data) {
+                    window.examSubmitted = true; // Set flag to true to disable exit warnings
                     navigateTo('/tryouts/' + tryoutSlug + '/result/' + (data.attempt_id || attemptId));
                 }).catch(function (err) {
                     console.error('Submit failed:', err);

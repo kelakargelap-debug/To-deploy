@@ -14,7 +14,7 @@ document.addEventListener('turbo:load', function() {
 
 // Disable Turbo for the exam page (has onbeforeunload protection)
 document.addEventListener('turbo:before-visit', function(event) {
-    if (window.location.pathname.includes('/exam')) {
+    if (window.location.pathname.includes('/exam') && !window.examSubmitted) {
         // If we're ON the exam page, require confirmation before leaving
         if (!confirm('Kamu memiliki ujian yang sedang berjalan. Yakin ingin keluar?')) {
             event.preventDefault();
